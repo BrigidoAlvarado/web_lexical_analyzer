@@ -22,4 +22,8 @@ public enum HtmlReservedWords {
     public String getWord() {
         return word;
     }
+
+    public boolean isReservedWord(String word) {
+        return this.word.equals(word);
+    }
 }

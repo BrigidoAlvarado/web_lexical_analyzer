@@ -15,4 +15,8 @@ public enum LexicalState {
     public String getState() {
         return state;
     }
+
+    public boolean isLexicalState(String state) {
+        return this.state.equals(state);
+    }
 }
