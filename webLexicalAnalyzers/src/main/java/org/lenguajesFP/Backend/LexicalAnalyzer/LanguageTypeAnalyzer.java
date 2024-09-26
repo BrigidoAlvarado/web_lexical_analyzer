@@ -55,13 +55,17 @@ public class LanguageTypeAnalyzer extends LexicalAnalyzer{
         try {
             if (html.isLexicalState(possibleToken)){
                 tokens.add(new Token(possibleToken,"Token de estado",row, column));
+                System.out.println("se encontro un "+ possibleToken);
+                System.out.println("redirigiendo al analizador de html");
                 possibleToken = null;
+                for (Token token : tokens){
+                    System.out.println(token.getLexeme());
+                }
+
                 //redirect
             } else if (LexicalState.css.isLexicalState(possibleToken)){
                 tokens.add(new Token(possibleToken,"Token de estado",row, column));
                 possibleToken = null;
-                System.out.println("se encontro un "+ possibleToken);
-                System.out.println("redirigiendo al analizador de html");
                 //redirect
             } else if (LexicalState.js.isLexicalState(possibleToken)){
                 tokens.add(new Token(possibleToken,"Token de estado",row, column));
@@ -70,8 +74,12 @@ public class LanguageTypeAnalyzer extends LexicalAnalyzer{
             } else{
                 errors.add(new TokenError(possibleToken, "Analizador de estados", row, column));
                 next();
-                System.out.println("se encontro un error llamado"+ possibleToken);
+                System.out.println("se encontro un error llamado "+ possibleToken);
                 System.out.println("redirigiendo al inicio");
+                for (Token token : errors){
+                    System.out.println(token.getLexeme());
+                }
+                possibleToken = null;
                 initState();
             }
         } catch (ArrayIndexOutOfBoundsException e) {
