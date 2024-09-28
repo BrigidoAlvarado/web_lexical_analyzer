@@ -4,6 +4,7 @@
  */
 package org.lenguajesFP.Frontend;
 
+import java.util.List;
 import org.lenguajesFP.Backend.Reader;
 
 /**
@@ -29,11 +30,15 @@ public class LexicalsWebAnalyzerApp extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         containerjPnl = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
+        textAreasContainerjPnl = new javax.swing.JPanel();
         jScrllPnInput = new javax.swing.JScrollPane();
         InputjTxtAr = new javax.swing.JTextArea();
+        jScrllPnlOutput = new javax.swing.JScrollPane();
+        OutputjTxtAr = new javax.swing.JTextArea();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         openMenuItem = new javax.swing.JMenuItem();
@@ -50,7 +55,7 @@ public class LexicalsWebAnalyzerApp extends javax.swing.JFrame {
         aboutMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        getContentPane().setLayout(new javax.swing.OverlayLayout(getContentPane()));
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jButton1.setText("GENERAR");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -58,6 +63,27 @@ public class LexicalsWebAnalyzerApp extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
+
+        javax.swing.GroupLayout containerjPnlLayout = new javax.swing.GroupLayout(containerjPnl);
+        containerjPnl.setLayout(containerjPnlLayout);
+        containerjPnlLayout.setHorizontalGroup(
+            containerjPnlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(containerjPnlLayout.createSequentialGroup()
+                .addGap(114, 114, 114)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 424, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(622, Short.MAX_VALUE))
+        );
+        containerjPnlLayout.setVerticalGroup(
+            containerjPnlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(containerjPnlLayout.createSequentialGroup()
+                .addGap(5, 5, 5)
+                .addComponent(jButton1))
+        );
+
+        getContentPane().add(containerjPnl, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1160, 50));
+
+        textAreasContainerjPnl.setBackground(new java.awt.Color(245, 245, 245));
+        textAreasContainerjPnl.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         InputjTxtAr.setColumns(20);
         InputjTxtAr.setRows(5);
@@ -68,28 +94,21 @@ public class LexicalsWebAnalyzerApp extends javax.swing.JFrame {
         });
         jScrllPnInput.setViewportView(InputjTxtAr);
 
-        javax.swing.GroupLayout containerjPnlLayout = new javax.swing.GroupLayout(containerjPnl);
-        containerjPnl.setLayout(containerjPnlLayout);
-        containerjPnlLayout.setHorizontalGroup(
-            containerjPnlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(containerjPnlLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, containerjPnlLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jScrllPnInput, javax.swing.GroupLayout.PREFERRED_SIZE, 610, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
-        containerjPnlLayout.setVerticalGroup(
-            containerjPnlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(containerjPnlLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrllPnInput, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
+        textAreasContainerjPnl.add(jScrllPnInput, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 430, 730));
 
-        getContentPane().add(containerjPnl);
+        OutputjTxtAr.setEditable(false);
+        OutputjTxtAr.setColumns(20);
+        OutputjTxtAr.setRows(5);
+        OutputjTxtAr.addCaretListener(new javax.swing.event.CaretListener() {
+            public void caretUpdate(javax.swing.event.CaretEvent evt) {
+                OutputjTxtArCaretUpdate(evt);
+            }
+        });
+        jScrllPnlOutput.setViewportView(OutputjTxtAr);
+
+        textAreasContainerjPnl.add(jScrllPnlOutput, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 16, 460, 720));
+
+        getContentPane().add(textAreasContainerjPnl, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 60, 960, 750));
 
         fileMenu.setMnemonic('f');
         fileMenu.setText("File");
@@ -169,8 +188,15 @@ public class LexicalsWebAnalyzerApp extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         Reader reader = new Reader();
-        reader.readCode(input);
+        List<String> output = reader.readCode(input);
+        for (String string : output) {
+             OutputjTxtAr.setText(string);
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void OutputjTxtArCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_OutputjTxtArCaretUpdate
+        // TODO add your handling code here:
+    }//GEN-LAST:event_OutputjTxtArCaretUpdate
 
     /**
      * @param args the command line arguments
@@ -209,6 +235,7 @@ public class LexicalsWebAnalyzerApp extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea InputjTxtAr;
+    private javax.swing.JTextArea OutputjTxtAr;
     private javax.swing.JMenuItem aboutMenuItem;
     private javax.swing.JPanel containerjPnl;
     private javax.swing.JMenuItem contentsMenuItem;
@@ -221,11 +248,13 @@ public class LexicalsWebAnalyzerApp extends javax.swing.JFrame {
     private javax.swing.JMenu helpMenu;
     private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrllPnInput;
+    private javax.swing.JScrollPane jScrllPnlOutput;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem openMenuItem;
     private javax.swing.JMenuItem pasteMenuItem;
     private javax.swing.JMenuItem saveAsMenuItem;
     private javax.swing.JMenuItem saveMenuItem;
+    private javax.swing.JPanel textAreasContainerjPnl;
     // End of variables declaration//GEN-END:variables
 
 }

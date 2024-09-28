@@ -1,39 +1,45 @@
 package org.lenguajesFP.Backend.LexicalAnalyzer;
 
+import org.lenguajesFP.Backend.Index;
 import org.lenguajesFP.Backend.Token;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class LexicalAnalyzer {
 
-    protected int index = 0;
+    protected Index index;
     protected int row = 1;
     protected int column = 1;
     protected char[] input;
     protected List<Token> tokens;
     protected List<Token> errors;
     protected List<String> outputCode;
-    protected String possibleToken;
+    protected PossibleToken possibleToken;
+
+    private List<String> letters = new ArrayList<>(Arrays.asList(
+            "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m",
+            "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"
+    ));
 
     protected boolean isSpace(char c){
         return c == ' ' || c == '\n' || c == '\r';
     }
 
     protected void next(){
-        if (input[index] == '\n'){
-            column++;
-        } else if (input[index] == '\r' || input[index] == ' '){
-            row++;
+        if (input[index.get()] == '\n'){
+            index.increaseRow();
+            row = index.getRow();
+        } else{
+            index.increaseColumn();
+            row = index.getColumn();
         }
-        index++;
+        index.increase();
     }
 
     protected void concat(){
-        if (possibleToken == null){
-            possibleToken = String.valueOf(input[index]);
-        } else {
-            possibleToken += input[index];
-        }
+        possibleToken.concat(input[index.get()]);
     }
 
     protected void initVars(LexicalAnalyzer analyzer){
@@ -48,7 +54,7 @@ public class LexicalAnalyzer {
 
     }
 
-    public int getIndex() {
+    public Index getIndex() {
         return index;
     }
 
@@ -76,7 +82,12 @@ public class LexicalAnalyzer {
         return outputCode;
     }
 
-    public String getPossibleToken() {
+    public PossibleToken getPossibleToken() {
         return possibleToken;
     }
+
+    public boolean isLessLetter(char c){
+        return letters.contains(String.valueOf(c));
+    }
+
 }
