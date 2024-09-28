@@ -35,4 +35,48 @@ public class LexicalAnalyzer {
             possibleToken += input[index];
         }
     }
+
+    protected void initVars(LexicalAnalyzer analyzer){
+        tokens = analyzer.getTokens();
+        errors = analyzer.getErrors();
+        outputCode = analyzer.getOutputCode();
+        index = analyzer.getIndex();
+        row = analyzer.getRow();
+        column = analyzer.getColumn();
+        possibleToken = analyzer.getPossibleToken();
+        input = analyzer.getInput();
+
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public int getRow() {
+        return row;
+    }
+
+    public int getColumn() {
+        return column;
+    }
+
+    public char[] getInput() {
+        return input;
+    }
+
+    public List<Token> getTokens() {
+        return tokens;
+    }
+
+    public List<Token> getErrors() {
+        return errors;
+    }
+
+    public List<String> getOutputCode() {
+        return outputCode;
+    }
+
+    public String getPossibleToken() {
+        return possibleToken;
+    }
 }

@@ -1,8 +1,11 @@
 package org.lenguajesFP.Backend.LexicalAnalyzer;
 
+import org.lenguajesFP.Backend.LexicalAnalyzer.html.HtmlAnalyzer;
 import org.lenguajesFP.Backend.Token;
 import org.lenguajesFP.Backend.TokenError;
 import org.lenguajesFP.Backend.enums.LexicalState;
+
+import javax.swing.text.html.HTMLDocument;
 import java.util.List;
 
 import static org.lenguajesFP.Backend.enums.LexicalState.html;
@@ -58,11 +61,9 @@ public class LanguageTypeAnalyzer extends LexicalAnalyzer{
                 System.out.println("se encontro un "+ possibleToken);
                 System.out.println("redirigiendo al analizador de html");
                 possibleToken = null;
-                for (Token token : tokens){
-                    System.out.println(token.getLexeme());
-                }
+                HtmlAnalyzer htmlAnalyzer = new HtmlAnalyzer();
+                htmlAnalyzer.read(this);
 
-                //redirect
             } else if (LexicalState.css.isLexicalState(possibleToken)){
                 tokens.add(new Token(possibleToken,"Token de estado",row, column));
                 possibleToken = null;
