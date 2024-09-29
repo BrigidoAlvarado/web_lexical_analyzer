@@ -4,6 +4,8 @@ import org.lenguajesFP.Backend.LexicalAnalyzer.LanguageTypeAnalyzer;
 import org.lenguajesFP.Backend.LexicalAnalyzer.LexicalAnalyzer;
 import org.lenguajesFP.Backend.Token;
 import org.lenguajesFP.Backend.TokenError;
+import org.lenguajesFP.Backend.enums.HtmlTag;
+import org.lenguajesFP.Backend.exceptions.InvalidTokenException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,19 +60,23 @@ public class HtmlAnalyzer extends LexicalAnalyzer {
         if (tagName.readTag(languageTypeAnalyzer)){
             System.out.println("la palabra reservado fue aprobada");
             tagTokens.add(new Token(possibleToken.getPossibleToken(), "Palabra Reservada", possibleToken.getPossibleToken(), "HTML", index.getRow(), index.getColumn()));
-            outputTag += possibleToken.getPossibleToken();
-            possibleToken.reStart();
+            //outputTag += possibleToken.getPossibleToken();
+            //possibleToken.reStart();
             typeTagState();
         } else{
-            errorState();
+            errorState(null);
         }
     }
 
-    private void errorState() throws ArrayIndexOutOfBoundsException{
-        errors.add(new TokenError(possibleToken.getPossibleToken(), "", "HTML", row, column));
+    private void errorState(TokenError error) throws ArrayIndexOutOfBoundsException{
+        if (error == null){
+            errors.add(new TokenError(possibleToken.getPossibleToken(), "", "HTML", row, column));
+        } else {
+            errors.add(error);
+        }
         possibleToken.reStart();
         tagTokens.clear();
-        //avanza hasta toda la linea
+        //omite la lecutura de toda la linea
         while(input[index.get()] != '\n'){
             next();
         }
@@ -80,18 +86,42 @@ public class HtmlAnalyzer extends LexicalAnalyzer {
 
     private void typeTagState() throws ArrayIndexOutOfBoundsException{
         System.out.println("evaluando "+input[index.get()]);
-        if (input[index.get()] == '/'){
-            concat();
+
+        // Se puede tratar de una etiqueta de cierre
+        if (input[index.get()] == '/'
+        && !possibleToken.getPossibleToken().equalsIgnoreCase(HtmlTag.area.name())
+        && !possibleToken.getPossibleToken().equalsIgnoreCase(HtmlTag.entrada.name())){
             next();
-            if (input[index.get()] == '>'){
-                System.out.println("es una etiqueta de cierre");
-                concat();
-                outputTag += possibleToken.getPossibleToken();
+            if (input[index.get()] == '>' ){
+                //System.out.println("es una etiqueta de cierre");
+                //imprimir la traduccion
+                outputTag += "/" + HtmlTag.valueOf(possibleToken.getPossibleToken()).getTranslate() + ">";
+
+                possibleToken.reStart();
                 System.out.println(outputTag);
                 tagTokens.add(new Token(possibleToken.getPossibleToken(), "Etiqueta cierre", possibleToken.getPossibleToken(), "HTML", index.getRow(), index.getColumn()));
                 possibleToken.reStart();
                 saveTag();
             }
+        }
+        //Se trata de una etiqueta de apertura
+        else if (isSpace(input[index.get()])){
+            //se guarda el espacio en la salida de texto
+            outputTag += HtmlTag.valueOf(possibleToken.getPossibleToken()).getTranslate();
+            //leer los posibles elementos de la etiqueta
+            try {
+                HtmlElement htmlElement = new HtmlElement(this.languageTypeAnalyzer, tagTokens);
+                if (htmlElement.readElements()){
+                    System.out.println("tiene elementos validos");
+                }
+            }catch (InvalidTokenException e){
+                errorState(e.getError());
+            }
+
+        }
+        // error
+        else {
+            errorState(null);
         }
     }
 

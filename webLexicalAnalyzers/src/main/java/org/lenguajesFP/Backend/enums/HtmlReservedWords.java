@@ -24,6 +24,14 @@ public enum HtmlReservedWords {
     }
 
     public boolean isReservedWord(String word) {
-        return this.word.equals(word);
+        return CLASS.word.equals(word)
+                || HREF.word.equals(word)
+                || ONCLICK.word.equals(word)
+                || ID.word.equals(word)
+                || STYLE.word.equals(word)
+                || TYPE.word.equals(word)
+                || PLACEHOLDER.word.equals(word)
+                || REQUIRED.word.equals(word)
+                || NAME.word.equals(word);
     }
 }

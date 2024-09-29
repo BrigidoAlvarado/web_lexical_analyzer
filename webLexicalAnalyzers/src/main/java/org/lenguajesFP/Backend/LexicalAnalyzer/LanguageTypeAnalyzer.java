@@ -2,11 +2,11 @@ package org.lenguajesFP.Backend.LexicalAnalyzer;
 
 import org.lenguajesFP.Backend.Index;
 import org.lenguajesFP.Backend.LexicalAnalyzer.html.HtmlAnalyzer;
+import org.lenguajesFP.Backend.PossibleToken;
 import org.lenguajesFP.Backend.Token;
 import org.lenguajesFP.Backend.TokenError;
 import org.lenguajesFP.Backend.enums.LexicalState;
 
-import javax.swing.text.html.HTMLDocument;
 import java.util.List;
 
 import static org.lenguajesFP.Backend.enums.LexicalState.html;

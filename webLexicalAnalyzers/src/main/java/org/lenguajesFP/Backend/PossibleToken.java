@@ -1,4 +1,4 @@
-package org.lenguajesFP.Backend.LexicalAnalyzer;
+package org.lenguajesFP.Backend;
 
 public class PossibleToken {
     private String possibleToken;

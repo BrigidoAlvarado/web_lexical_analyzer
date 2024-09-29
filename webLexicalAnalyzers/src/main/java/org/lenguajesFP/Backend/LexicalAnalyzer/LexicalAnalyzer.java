@@ -1,6 +1,7 @@
 package org.lenguajesFP.Backend.LexicalAnalyzer;
 
 import org.lenguajesFP.Backend.Index;
+import org.lenguajesFP.Backend.PossibleToken;
 import org.lenguajesFP.Backend.Token;
 
 import java.util.ArrayList;
@@ -22,6 +23,12 @@ public class LexicalAnalyzer {
             "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m",
             "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"
     ));
+
+    private List<String> capitalLetters = new ArrayList<>(Arrays.asList(
+            "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
+            "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
+    ));
+
 
     protected boolean isSpace(char c){
         return c == ' ' || c == '\n' || c == '\r';
@@ -90,4 +97,7 @@ public class LexicalAnalyzer {
         return letters.contains(String.valueOf(c));
     }
 
+    public boolean isLetter(char c){
+        return letters.contains(String.valueOf(c)) || capitalLetters.contains(String.valueOf(c));
+    }
 }
