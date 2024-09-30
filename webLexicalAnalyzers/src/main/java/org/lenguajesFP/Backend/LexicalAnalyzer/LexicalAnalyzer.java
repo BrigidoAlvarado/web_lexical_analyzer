@@ -61,6 +61,10 @@ public class LexicalAnalyzer {
 
     }
 
+    protected String saveCode(String output){
+        return output += input[index.get()];
+    }
+
     public Index getIndex() {
         return index;
     }

@@ -1,10 +1,12 @@
 package org.lenguajesFP.Backend.LexicalAnalyzer.html;
 
 import org.lenguajesFP.Backend.LexicalAnalyzer.LanguageTypeAnalyzer;
+import org.lenguajesFP.Backend.LexicalAnalyzer.StringAnalyzer;
 import org.lenguajesFP.Backend.Token;
 import org.lenguajesFP.Backend.TokenError;
 import org.lenguajesFP.Backend.enums.HtmlReservedWords;
 import org.lenguajesFP.Backend.exceptions.InvalidTokenException;
+import org.lenguajesFP.Backend.exceptions.LexicalAnalyzerException;
 
 import java.util.List;
 
@@ -23,22 +25,22 @@ public class HtmlElement extends HtmlAnalyzer {
         possibleToken.reStart();
     }
 
-    public boolean readElements() throws InvalidTokenException, ArrayIndexOutOfBoundsException {
+    public boolean readElements() throws InvalidTokenException, ArrayIndexOutOfBoundsException, LexicalAnalyzerException {
         System.out.println("iniciando");
         initState();
         return approved;
     }
 
-    private void initState() throws InvalidTokenException, ArrayIndexOutOfBoundsException {
+    private void initState() throws InvalidTokenException, ArrayIndexOutOfBoundsException, LexicalAnalyzerException {
         System.out.println("en el estado inicial del lector de elementos");
-        if (isSpace(input[index.get()])){
+        if (isSpace(input[index.get()])){//es un espacio
             next();
             initState();
-        } else if (isLetter(input[index.get()])){
+        } else if (isLetter(input[index.get()])){//es una letra
             concat();
             next();
             elementState();
-        } else{
+        } else{// es un error
             throw new InvalidTokenException(
                     new TokenError(possibleToken.getPossibleToken(),
                             null,
@@ -48,15 +50,15 @@ public class HtmlElement extends HtmlAnalyzer {
         }
     }
 
-    private void elementState() throws InvalidTokenException, ArrayIndexOutOfBoundsException {
+    private void elementState() throws InvalidTokenException, ArrayIndexOutOfBoundsException, LexicalAnalyzerException {
         System.out.println("en el estado de is Letter");
-        if (isLetter(input[index.get()])){
+        if (isLetter(input[index.get()])){//es una letra
             concat();
             next();
             elementState();
-        } else if (input[index.get()] == '='){
+        } else if (input[index.get()] == '='){//es un signo igual
             saveElement();
-        } else{
+        } else{// es un error
             throw new InvalidTokenException(new TokenError(
                     possibleToken.getPossibleToken(),
                     null,
@@ -67,13 +69,13 @@ public class HtmlElement extends HtmlAnalyzer {
         }
     }
 
-    private void saveElement() throws InvalidTokenException, ArrayIndexOutOfBoundsException {
+    private void saveElement() throws InvalidTokenException, ArrayIndexOutOfBoundsException, LexicalAnalyzerException {
         System.out.println("en el estado guardando el elemento");
         System.out.println("el posible elemento es "+ possibleToken.getPossibleToken());
 
         if (HtmlReservedWords.ID.isReservedWord(possibleToken.getPossibleToken())){
-            approved = true;
-            //se crea el token
+
+            //se crea el token de la palabra reservada
             tagToken.add(
                     new Token(possibleToken.getPossibleToken(),
                             "Palabra Reservada",
@@ -86,6 +88,7 @@ public class HtmlElement extends HtmlAnalyzer {
             outputElement(possibleToken.getPossibleToken());
             System.out.println("elemento guardado y leido "+possibleToken.getPossibleToken());
             possibleToken.reStart();
+            // se guarda el token de =
             tagToken.add( new Token(
                     "=",
                     "Palbara Reservada",
@@ -97,10 +100,11 @@ public class HtmlElement extends HtmlAnalyzer {
             outputElement("=");
             System.out.println("se imprimira: "+outputCode);
             next();
+            //se empieza a leer la cadena asociada
             stringState();
 
 
-        } else {
+        } else {// estado de error
             throw new InvalidTokenException( new TokenError(
                     possibleToken.getPossibleToken(),
                     null,
@@ -111,8 +115,28 @@ public class HtmlElement extends HtmlAnalyzer {
         }
     }
 
-    private void stringState(){
+    private void stringState() throws LexicalAnalyzerException, InvalidTokenException {
+
         System.out.println("en el estado valida cadenas");
+
+        StringAnalyzer stringAnalyzer = new StringAnalyzer(languageTypeAnalyzer, tagToken);
+        if (stringAnalyzer.readString()){
+            System.out.println("se aprobo la cadena");
+            outputCode += possibleToken.getPossibleToken();
+            System.out.println("se guardo el token "+possibleToken.getPossibleToken());
+            System.out.println("se imprimira "+outputCode);
+            possibleToken.reStart();
+            next();
+            otherElementsState();
+        } else{
+            throw new InvalidTokenException( new TokenError(
+                    possibleToken.getPossibleToken(),
+                    null,
+                    "HTML",
+                    index.getRow(),
+                    index.getColumn()
+            ));
+        }
     }
 
     private void outputElement(String element) throws InvalidTokenException, ArrayIndexOutOfBoundsException {
@@ -123,15 +147,26 @@ public class HtmlElement extends HtmlAnalyzer {
         }
     }
 
-    private void otherElementsState() throws InvalidTokenException, ArrayIndexOutOfBoundsException {
-        if (isSpace(input[index.get()])){
+    private void otherElementsState() throws InvalidTokenException, ArrayIndexOutOfBoundsException, LexicalAnalyzerException {
+        if (isSpace(input[index.get()])){// es un espacio
+            outputCode = saveCode(outputCode);
             next();
             otherElementsState();
-        } else if (isLetter(input[index.get()])){
+        } else if (isLetter(input[index.get()])){// puede ser una palabra reservada
             concat();
             next();
             elementState();
-        } else if (input[index.get()] == '>') {
+        } else if (input[index.get()] == '>') {// finaliza la cadena
+            approved = true;
+            tagToken.add( new Token(
+                    ">",
+                    "Etiquetas_de_Cierre",
+                    ">",
+                    "HTML",
+                    index.getRow(),
+                    index.getColumn()
+            ));
+            outputCode = saveCode(outputCode);
 
         }else {
                 throw new InvalidTokenException(new TokenError(

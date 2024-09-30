@@ -1,6 +1,7 @@
 package org.lenguajesFP.Backend;
 
 import org.lenguajesFP.Backend.LexicalAnalyzer.LanguageTypeAnalyzer;
+import org.lenguajesFP.Backend.exceptions.LexicalAnalyzerException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,7 @@ public class Reader {
     char[] input;
     Index index = new Index();
 
-    public List<String> readCode(String input){
+    public List<String> readCode(String input) throws LexicalAnalyzerException {
         this.input = input.toCharArray();
         LanguageTypeAnalyzer analyzer = new LanguageTypeAnalyzer();
         return analyzer.read(tokens,errors,outputCode,this.input,index);

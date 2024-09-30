@@ -6,6 +6,7 @@ import org.lenguajesFP.Backend.PossibleToken;
 import org.lenguajesFP.Backend.Token;
 import org.lenguajesFP.Backend.TokenError;
 import org.lenguajesFP.Backend.enums.LexicalState;
+import org.lenguajesFP.Backend.exceptions.LexicalAnalyzerException;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ import static org.lenguajesFP.Backend.enums.LexicalState.html;
 public class LanguageTypeAnalyzer extends LexicalAnalyzer{
 
     public List<String> read(List<Token> tokens, List<Token> errors, List<String> outputCode,
-                     char[] input, Index index){
+                     char[] input, Index index) throws LexicalAnalyzerException{
         this.tokens = tokens;
         this.errors = errors;
         this.outputCode = outputCode;
@@ -39,7 +40,7 @@ public class LanguageTypeAnalyzer extends LexicalAnalyzer{
 
     }
 
-    private void initState() throws ArrayIndexOutOfBoundsException{
+    private void initState() throws ArrayIndexOutOfBoundsException, LexicalAnalyzerException{
         try {
             if (isSpace(input[index.get()])){
                 next();
@@ -55,7 +56,7 @@ public class LanguageTypeAnalyzer extends LexicalAnalyzer{
 
     }
 
-    private void wordState() throws ArrayIndexOutOfBoundsException{
+    private void wordState() throws ArrayIndexOutOfBoundsException, LexicalAnalyzerException{
             if (isSpace(input[index.get()])){
                 redirect();
             } else{
@@ -65,7 +66,7 @@ public class LanguageTypeAnalyzer extends LexicalAnalyzer{
             }
     }
 
-    private void redirect() throws ArrayIndexOutOfBoundsException{
+    private void redirect() throws ArrayIndexOutOfBoundsException, LexicalAnalyzerException {
 
             if (html.isLexicalState(possibleToken.getPossibleToken())){
                 tokens.add(new Token(possibleToken.getPossibleToken(),"Estado", possibleToken.getPossibleToken(), "" , index.getRow(), index.getColumn()));

@@ -1,6 +1,8 @@
 package org.lenguajesFP.Backend.LexicalAnalyzer;
 
 import org.lenguajesFP.Backend.Token;
+import org.lenguajesFP.Backend.TokenError;
+import org.lenguajesFP.Backend.exceptions.InvalidTokenException;
 import org.lenguajesFP.Backend.exceptions.LexicalAnalyzerException;
 
 import java.util.List;
@@ -18,19 +20,26 @@ public class StringAnalyzer extends LexicalAnalyzer {
         super.initVars(this.languageTypeAnalyzer);
     }
 
-    public boolean readString() throws LexicalAnalyzerException {
+    public boolean readString() throws LexicalAnalyzerException, InvalidTokenException {
         initState();
         return approved;
     }
 
-    private void initState() throws ArrayIndexOutOfBoundsException{
+    private void initState() throws ArrayIndexOutOfBoundsException, InvalidTokenException{
+        System.out.println("evaluando: "+input[index.get()]);
         if (input[index.get()] == '"'){
-            concat();
-            finalState();
-        } else {
             concat();
             next();
             stringState();
+        } else {
+            concat();
+            throw new InvalidTokenException( new TokenError(
+                    possibleToken.getPossibleToken(),
+                    null,
+                    "HTML",
+                    index.getRow(),
+                    index.getColumn()
+            ));
         }
     }
 
