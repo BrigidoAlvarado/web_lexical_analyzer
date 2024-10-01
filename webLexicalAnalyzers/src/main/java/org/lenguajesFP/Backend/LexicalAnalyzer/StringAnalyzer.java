@@ -9,25 +9,33 @@ import java.util.List;
 
 public class StringAnalyzer extends LexicalAnalyzer {
 
-    private LanguageTypeAnalyzer languageTypeAnalyzer;
-    private List<Token> tagToken;
-    private boolean approved = false;
+    protected LanguageTypeAnalyzer languageTypeAnalyzer;
+    protected List<Token> tagToken;
+    protected boolean approved = false;
+
+    protected char startSymbol;
+    protected char endSymnbol;
 
     public StringAnalyzer(LanguageTypeAnalyzer languageTypeAnalyzer, List<Token> tagToken) {
+
         System.out.println("iniciando string analyzer");
+
         this.tagToken = tagToken;
         this.languageTypeAnalyzer = languageTypeAnalyzer;
         super.initVars(this.languageTypeAnalyzer);
+        startSymbol = '"';
+        endSymnbol = '"';
     }
 
     public boolean readString() throws LexicalAnalyzerException, InvalidTokenException {
+        System.out.println("entrando en el estado inicial");
         initState();
         return approved;
     }
 
-    private void initState() throws ArrayIndexOutOfBoundsException, InvalidTokenException{
+    protected void initState() throws ArrayIndexOutOfBoundsException, InvalidTokenException{
         System.out.println("evaluando: "+input[index.get()]);
-        if (input[index.get()] == '"'){
+        if (input[index.get()] == startSymbol){
             concat();
             next();
             stringState();
@@ -43,8 +51,8 @@ public class StringAnalyzer extends LexicalAnalyzer {
         }
     }
 
-    private void stringState() throws ArrayIndexOutOfBoundsException{
-        if (input[index.get()] == '"'){
+    protected void stringState() throws ArrayIndexOutOfBoundsException{
+        if (input[index.get()] == endSymnbol){
             concat();
             finalState();
         } else {
@@ -54,7 +62,7 @@ public class StringAnalyzer extends LexicalAnalyzer {
         }
     }
 
-    private void finalState() throws ArrayIndexOutOfBoundsException{
+    protected void finalState() throws ArrayIndexOutOfBoundsException{
         approved = true;
         tagToken.add( new Token(
                 possibleToken.getPossibleToken(),

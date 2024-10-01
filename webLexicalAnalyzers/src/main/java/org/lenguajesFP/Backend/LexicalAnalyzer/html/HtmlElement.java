@@ -52,6 +52,7 @@ public class HtmlElement extends HtmlAnalyzer {
 
     private void elementState() throws InvalidTokenException, ArrayIndexOutOfBoundsException, LexicalAnalyzerException {
         System.out.println("en el estado de is Letter");
+
         if (isLetter(input[index.get()])){//es una letra
             concat();
             next();
@@ -149,7 +150,7 @@ public class HtmlElement extends HtmlAnalyzer {
 
     private void otherElementsState() throws InvalidTokenException, ArrayIndexOutOfBoundsException, LexicalAnalyzerException {
         if (isSpace(input[index.get()])){// es un espacio
-            outputCode = saveCode(outputCode);
+            outputCode = saveCurrentChar(outputCode);
             next();
             otherElementsState();
         } else if (isLetter(input[index.get()])){// puede ser una palabra reservada
@@ -166,7 +167,7 @@ public class HtmlElement extends HtmlAnalyzer {
                     index.getRow(),
                     index.getColumn()
             ));
-            outputCode = saveCode(outputCode);
+            outputCode = saveCurrentChar(outputCode);
 
         }else {
                 throw new InvalidTokenException(new TokenError(

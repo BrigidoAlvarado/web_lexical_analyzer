@@ -29,6 +29,8 @@ public class LexicalAnalyzer {
             "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
     ));
 
+    private List<String> numbers = new ArrayList<>(Arrays.asList("0","1","2","3","4","5","6","7","8","9"));
+
 
     protected boolean isSpace(char c){
         return c == ' ' || c == '\n' || c == '\r';
@@ -61,8 +63,12 @@ public class LexicalAnalyzer {
 
     }
 
-    protected String saveCode(String output){
-        return output += input[index.get()];
+    protected String saveCurrentChar(String output){
+        if (output == null){
+            return String.valueOf(input[index.get()]);
+        } else {
+            return output += input[index.get()];
+        }
     }
 
     public Index getIndex() {
@@ -101,7 +107,12 @@ public class LexicalAnalyzer {
         return letters.contains(String.valueOf(c));
     }
 
+    protected boolean isLessLetterOrNumber(char c){
+        return letters.contains(String.valueOf(c)) || numbers.contains(String.valueOf(c));
+    }
+
     public boolean isLetter(char c){
         return letters.contains(String.valueOf(c)) || capitalLetters.contains(String.valueOf(c));
     }
+
 }

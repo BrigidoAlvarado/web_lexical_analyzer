@@ -22,22 +22,22 @@ public class TagName extends HtmlAnalyzer{
             System.out.println("es una letra");
             concat();
             next();
-            wordState();
+            tagNameState();
         } else{
             approved = false;
         }
     }
 
-    private void wordState() throws ArrayIndexOutOfBoundsException{
-        if (isSpace(input[index.get()]) || input[index.get()] == '/'){
+    private void tagNameState() throws ArrayIndexOutOfBoundsException{
+        if (isSpace(input[index.get()]) || input[index.get()] == '/' || input[index.get()] == '>'){
             //validar si es una palabra reservada
             approved = isReservedWord();
             System.out.println("la palabra reservada es: " + approved);
-        } else if( isLessLetter(input[index.get()])){
+        } else if( isLessLetterOrNumber(input[index.get()])){
             System.out.println("es una letra otra vez");
           concat();
           next();
-          wordState();
+          tagNameState();
         } else{
             approved = false;
         }

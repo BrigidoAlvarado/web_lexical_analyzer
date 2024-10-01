@@ -79,6 +79,7 @@ public class LanguageTypeAnalyzer extends LexicalAnalyzer{
             } else if (LexicalState.css.isLexicalState(possibleToken.getPossibleToken())){
                 tokens.add(new Token(possibleToken.getPossibleToken(),"Estado", possibleToken.getPossibleToken(), "", index.getRow(), index.getColumn()));
                 possibleToken.reStart();
+                System.out.println("redirigiendo al analizador de codigo css");
                 //redirect
             } else if (LexicalState.js.isLexicalState(possibleToken.getPossibleToken())){
                 tokens.add(new Token(possibleToken.getPossibleToken(),"Estado", possibleToken.getPossibleToken(),"", index.getRow(), index.getColumn()));

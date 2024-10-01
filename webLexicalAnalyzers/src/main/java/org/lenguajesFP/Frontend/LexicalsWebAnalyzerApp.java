@@ -5,6 +5,7 @@
 package org.lenguajesFP.Frontend;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.swing.JOptionPane;
 import org.lenguajesFP.Backend.Reader;
 import org.lenguajesFP.Backend.exceptions.LexicalAnalyzerException;
@@ -189,12 +190,13 @@ public class LexicalsWebAnalyzerApp extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+
         try {
             Reader reader = new Reader();
             List<String> output = reader.readCode(input);
-            for (String string : output) {
-                OutputjTxtAr.setText(string);
-            }
+            String outputText = output.stream().collect(Collectors.joining());
+            OutputjTxtAr.setText(outputText);
+
         } catch (LexicalAnalyzerException e) {
             JOptionPane.showMessageDialog(this, "ANALISIS FINALIZADO", e.getMessage(), JOptionPane.INFORMATION_MESSAGE);
         }
