@@ -115,4 +115,7 @@ public class LexicalAnalyzer {
         return letters.contains(String.valueOf(c)) || capitalLetters.contains(String.valueOf(c));
     }
 
+    protected char current(){
+        return input[index.get()];
+    }
 }
