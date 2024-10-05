@@ -12,7 +12,7 @@ public class Universal extends LexicalAnalyzer {
         super.initVars(lexicalAnalyzer);
     }
 
-    public boolean isToken(){
+    public boolean isCharacterToken(){
         return current() == TOKEN;
     }
 

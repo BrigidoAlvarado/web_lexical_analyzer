@@ -14,22 +14,25 @@ public class LexicalAnalyzer {
     protected int row = 1;
     protected int column = 1;
     protected char[] input;
+    protected List<String> htmlTokens;
+    protected List<String> cssTokens;
+    protected List<String> jsTokens;
     protected List<Token> tokens;
     protected List<Token> errors;
     protected List<String> outputCode;
     protected PossibleToken possibleToken;
 
-    private List<String> letters = new ArrayList<>(Arrays.asList(
+    private final List<String> letters = new ArrayList<>(Arrays.asList(
             "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m",
             "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"
     ));
 
-    private List<String> capitalLetters = new ArrayList<>(Arrays.asList(
+    private final List<String> capitalLetters = new ArrayList<>(Arrays.asList(
             "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
             "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
     ));
 
-    private List<String> numbers = new ArrayList<>(Arrays.asList("0","1","2","3","4","5","6","7","8","9"));
+    private final List<String> numbers = new ArrayList<>(Arrays.asList("0","1","2","3","4","5","6","7","8","9"));
 
 
     protected boolean isSpace(char c){
@@ -117,5 +120,9 @@ public class LexicalAnalyzer {
 
     protected char current(){
         return input[index.get()];
+    }
+
+    protected void readExceptionToken(){
+        //if ()
     }
 }

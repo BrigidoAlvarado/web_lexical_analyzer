@@ -11,34 +11,40 @@ public class Other extends LexicalAnalyzer {
     public static final String TYPE = "Otros";
     //public static final String
 
-    public static final List<String> OTHERS = List.of("px","rem","em","vw","vh","odd","even");
+    public static final List<String> OTHERS = List.of("::after","::before",":active",":hover","px","rem","em","vw","vh","odd","even");
 
-    public static final List<String> OTHERS_EXCEPTIONS = List.of(":hover",":active",":not()","::before","::after");
+    public static final String EXCEPTION_TOKEN = ":not()";
+
+    public static final String EXCEPTION_WORD = ":not";
 
     public static final List<Character> OTHER_CHARS = List.of('%',';',',','(',')','{','}');
 
-    public static final Character CHAR_EXCEPCIONS = ':';
+    public static final Character CHAR_EXCEPTIONS = ':';
 
     private boolean isToken = false;
+    private Combinator combinator;
+    private Universal universal;
 
     public Other(LexicalAnalyzer lexicalAnalyzer) {
         initVars(lexicalAnalyzer);
+        combinator = new Combinator(lexicalAnalyzer);
+        universal = new Universal(lexicalAnalyzer);
     }
 
-    public boolean isToken(){
+    public boolean isCharacterToken(){
         if (OTHER_CHARS.contains(current())){
             isToken = true;
-        } else if (current() == CHAR_EXCEPCIONS){
+        } else if (current() == CHAR_EXCEPTIONS){
             isToken = isOtherExceptions();
         }
         return isToken;
     }
 
-    public void saveToken(){
+    public void saveCharToken(String token){
         tokens.add(new Token(
-                String.valueOf(current()),
+                token,
                 TYPE,
-                String.valueOf(current()),
+                token,
                 "CSS",
                 index.getRow(),
                 index.getColumn()
@@ -48,5 +54,29 @@ public class Other extends LexicalAnalyzer {
 
     private boolean isOtherExceptions(){
         return (isSpace(input[index.get() + 1]));
+    }
+
+    public boolean isExceptionWord() {
+        boolean isToken = false;
+        if (possibleToken.getPossibleToken().equalsIgnoreCase(EXCEPTION_WORD)) {
+
+            if (
+                    combinator.isCharacterToken() ||
+                    universal.isCharacterToken() || isSpace(current()) ||
+                    (this.isCharacterToken() && current() != '(' && current() != ')'))
+            {
+                    isToken = (possibleToken.getPossibleToken().equalsIgnoreCase(EXCEPTION_TOKEN));
+
+            }  else {
+                concat();
+                next();
+                isExceptionWord();
+            }
+        }
+        return isToken;
+    }
+
+    public boolean isToken(){
+        return OTHERS.contains(possibleToken.getPossibleToken());
     }
 }

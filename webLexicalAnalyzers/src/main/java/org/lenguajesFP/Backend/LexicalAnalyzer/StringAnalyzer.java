@@ -11,21 +11,26 @@ public class StringAnalyzer extends LexicalAnalyzer {
 
     protected LanguageTypeAnalyzer languageTypeAnalyzer;
     protected List<Token> tagToken;
+    protected String language;
     protected boolean approved = false;
-
     protected char startSymbol;
     protected char endSymnbol;
 
-    public StringAnalyzer(LanguageTypeAnalyzer languageTypeAnalyzer, List<Token> tagToken) {
+    public StringAnalyzer(LanguageTypeAnalyzer languageTypeAnalyzer, List<Token> tagToken, String language) throws LexicalAnalyzerException {
 
         System.out.println("iniciando string analyzer");
-
+        this.language = language;
         this.tagToken = tagToken;
         this.languageTypeAnalyzer = languageTypeAnalyzer;
         super.initVars(this.languageTypeAnalyzer);
         startSymbol = '"';
         endSymnbol = '"';
     }
+
+    public StringAnalyzer(LanguageTypeAnalyzer languageTypeAnalyzer, List<Token> tagToken, String language, char startSymbol, char endSymbol) throws LexicalAnalyzerException {
+
+    }
+
 
     public boolean readString() throws LexicalAnalyzerException, InvalidTokenException {
         System.out.println("entrando en el estado inicial");
@@ -44,7 +49,7 @@ public class StringAnalyzer extends LexicalAnalyzer {
             throw new InvalidTokenException( new TokenError(
                     possibleToken.getPossibleToken(),
                     null,
-                    "HTML",
+                    language,
                     index.getRow(),
                     index.getColumn()
             ));
@@ -68,7 +73,7 @@ public class StringAnalyzer extends LexicalAnalyzer {
                 possibleToken.getPossibleToken(),
                 "cadena",
                 "\"([^\"\\\\]*(\\\\.[^\"\\\\]*)*)\"\n",
-                "HTML",
+                language,
                 index.getRow(),
                 index.getColumn()
         ));

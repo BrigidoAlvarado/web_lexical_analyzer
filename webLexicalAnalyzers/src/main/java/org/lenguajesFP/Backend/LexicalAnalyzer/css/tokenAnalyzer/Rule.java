@@ -1,9 +1,12 @@
 package org.lenguajesFP.Backend.LexicalAnalyzer.css.tokenAnalyzer;
 
+import org.lenguajesFP.Backend.LexicalAnalyzer.LexicalAnalyzer;
+import org.lenguajesFP.Backend.Token;
+
 import java.util.Arrays;
 import java.util.List;
 
-public class Rule {
+public class Rule extends LexicalAnalyzer {
 
     public static final List<String> RULES = Arrays.asList(
             "color",
@@ -26,7 +29,13 @@ public class Rule {
             "right",
             "auto",
             "float",
-            "position");
+            "position",
+            "static",
+            "relative",
+            "absolute",
+            "sticky",
+            "fixed"
+            );
 
     public static final List<String> KEYS = Arrays.asList(
             "background",
@@ -44,8 +53,10 @@ public class Rule {
             "text");
 
     public static final List<String> COMBINED_RULES = Arrays.asList(
-            "border-top, border-bottom, border-left, border-right",
-            "static, relative, absolute, sticky, fixed",
+            "border-top",
+            "border-bottom",
+            "border-left",
+            "border-right",
             "background-color",
             "font-size",
             "font-weight",
@@ -68,4 +79,31 @@ public class Rule {
             "ist-style",
             "text-align",
             "box-shadow");
+
+    public Rule (LexicalAnalyzer lexicalAnalyzer){
+        super.initVars(lexicalAnalyzer);
+    }
+
+    public void saveToken(){
+        tokens.add( new Token(
+                possibleToken.getPossibleToken(),
+                "Reglas",
+                possibleToken.getPossibleToken(),
+                "CSS",
+                index.getRow(),
+                index.getColumn()
+        ));
+        outputCode.add(possibleToken.getPossibleToken());
+        possibleToken.reStart();
+    }
+
+    public boolean isToken() {
+
+        return (RULES.contains(possibleToken.getPossibleToken()) || COMBINED_RULES.contains(possibleToken.getPossibleToken()));
+
+    }
+
+    public boolean isKey(){
+        return (KEYS.contains(possibleToken.getPossibleToken()) && input[index.get() + 1] == '-');
+    }
 }

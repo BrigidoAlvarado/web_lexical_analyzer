@@ -1,6 +1,7 @@
 package org.lenguajesFP.Backend.LexicalAnalyzer;
 
 import org.lenguajesFP.Backend.Index;
+import org.lenguajesFP.Backend.LexicalAnalyzer.css.CssAnalyzer;
 import org.lenguajesFP.Backend.LexicalAnalyzer.html.HtmlAnalyzer;
 import org.lenguajesFP.Backend.PossibleToken;
 import org.lenguajesFP.Backend.Token;
@@ -15,21 +16,31 @@ import static org.lenguajesFP.Backend.enums.LexicalState.html;
 public class LanguageTypeAnalyzer extends LexicalAnalyzer{
 
     public List<String> read(List<Token> tokens, List<Token> errors, List<String> outputCode,
-                     char[] input, Index index) throws LexicalAnalyzerException{
+                     char[] input, Index index, List<String> htmlOutput, List<String> cssOutput,
+                             List<String> jsOutput) throws LexicalAnalyzerException{
         this.tokens = tokens;
         this.errors = errors;
         this.outputCode = outputCode;
         this.input = input;
         this.index = index;
         this.possibleToken = new PossibleToken();
+        this.htmlTokens = htmlOutput;
+        this.cssTokens = cssOutput;
+        this.jsTokens = jsOutput;
+
         try {
             initState();
         }catch (ArrayIndexOutOfBoundsException e){
-
+            System.out.println("SE ACABO XDD");
         }
-        System.out.println("retornando "+outputCode);
-        System.out.println("tokens hallados");
-        for (Token token : tokens) {
+
+        System.out.println("retornando al archivo de texto "+outputCode);
+        System.out.println("tokens hallados de HTML");
+        for (String token : htmlOutput) {
+            System.out.println(token);
+        }
+        System.out.println("tokens hallados de CSS");
+        for (String token : htmlOutput) {
             System.out.println(token);
         }
         System.out.println("errores hallados");
@@ -74,13 +85,17 @@ public class LanguageTypeAnalyzer extends LexicalAnalyzer{
                 System.out.println("redirigiendo al analizador de html");
                 possibleToken.reStart();
                 HtmlAnalyzer htmlAnalyzer = new HtmlAnalyzer();
+                outputCode = htmlTokens;
                 htmlAnalyzer.read(this);
 
             } else if (LexicalState.css.isLexicalState(possibleToken.getPossibleToken())){
                 tokens.add(new Token(possibleToken.getPossibleToken(),"Estado", possibleToken.getPossibleToken(), "", index.getRow(), index.getColumn()));
                 possibleToken.reStart();
                 System.out.println("redirigiendo al analizador de codigo css");
-                //redirect
+                CssAnalyzer cssAnalyzer = new CssAnalyzer();
+                outputCode = cssTokens;
+                System.out.println("css tokens es: "+cssTokens);
+                cssAnalyzer.readCss(this);
             } else if (LexicalState.js.isLexicalState(possibleToken.getPossibleToken())){
                 tokens.add(new Token(possibleToken.getPossibleToken(),"Estado", possibleToken.getPossibleToken(),"", index.getRow(), index.getColumn()));
                 possibleToken.reStart();

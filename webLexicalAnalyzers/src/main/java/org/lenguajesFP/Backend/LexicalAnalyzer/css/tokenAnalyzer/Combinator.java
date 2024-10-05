@@ -10,15 +10,20 @@ import java.util.List;
 
 public class Combinator extends LexicalAnalyzer {
 
-    public final static List<Character> COMBINATOR = new ArrayList<>(Arrays.asList('>','+','~',' '));
+    public final static List<Character> COMBINATOR = new ArrayList<>(Arrays.asList(
+            '>',
+            '+',
+            '~',
+            ' '
+    ));
 
     private boolean isToken = false;
 
-    public Combinator(LanguageTypeAnalyzer languageTypeAnalyzer) {
+    public Combinator(LexicalAnalyzer languageTypeAnalyzer) {
         initVars(languageTypeAnalyzer);
     }
 
-    public boolean isToken() {
+    public boolean isCharacterToken() {
         if (COMBINATOR.contains(current())) {
             isToken = true;
             if (current() == ' '){

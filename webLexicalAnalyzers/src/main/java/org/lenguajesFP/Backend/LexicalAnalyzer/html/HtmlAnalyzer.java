@@ -42,7 +42,7 @@ public class HtmlAnalyzer extends LexicalAnalyzer {
             }
             possibleToken.reStart();
             index.decrease();
-            languageTypeAnalyzer.read(tokens,errors,outputCode,input,index);
+            languageTypeAnalyzer.read(tokens,errors,outputCode,input,index, htmlTokens, cssTokens, jsTokens);
         } else {
             wordState();
         }
@@ -193,7 +193,7 @@ public class HtmlAnalyzer extends LexicalAnalyzer {
 
         System.out.println("en el estado de texto");
 
-        TextAnalizer textAnalizer = new TextAnalizer(languageTypeAnalyzer, tagTokens);
+        TextAnalizer textAnalizer = new TextAnalizer(languageTypeAnalyzer, tagTokens,"HTML");
 
         try {
             if (isSpace(input[index.get()]) || input[index.get()] == '<') {

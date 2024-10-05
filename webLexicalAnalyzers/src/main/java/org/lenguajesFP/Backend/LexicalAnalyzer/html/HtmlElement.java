@@ -120,7 +120,7 @@ public class HtmlElement extends HtmlAnalyzer {
 
         System.out.println("en el estado valida cadenas");
 
-        StringAnalyzer stringAnalyzer = new StringAnalyzer(languageTypeAnalyzer, tagToken);
+        StringAnalyzer stringAnalyzer = new StringAnalyzer(languageTypeAnalyzer, tagToken,"HTML");
         if (stringAnalyzer.readString()){
             System.out.println("se aprobo la cadena");
             outputCode += possibleToken.getPossibleToken();
