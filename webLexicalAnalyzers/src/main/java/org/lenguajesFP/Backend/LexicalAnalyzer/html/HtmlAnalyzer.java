@@ -43,6 +43,10 @@ public class HtmlAnalyzer extends LexicalAnalyzer {
             possibleToken.reStart();
             index.decrease();
             languageTypeAnalyzer.read(tokens,errors,outputCode,input,index, htmlTokens, cssTokens, jsTokens);
+        } else if (input[index.get()] == '/'){//cometario
+            CommentAnalyzer commentAnalyzer = new CommentAnalyzer(languageTypeAnalyzer);
+            commentAnalyzer.readComment("HTML");
+            initState();
         } else {
             wordState();
         }

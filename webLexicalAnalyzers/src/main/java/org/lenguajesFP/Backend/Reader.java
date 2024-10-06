@@ -20,6 +20,7 @@ public class Reader {
     public List<String> readCode(String input) throws LexicalAnalyzerException {
         this.input = input.toCharArray();
         LanguageTypeAnalyzer analyzer = new LanguageTypeAnalyzer();
+        System.out.println("1 cssOutput "+cssTokens);
         return analyzer.read(
                 tokens,
                 errors,

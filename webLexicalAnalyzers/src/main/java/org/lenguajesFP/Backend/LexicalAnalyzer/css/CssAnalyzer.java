@@ -93,6 +93,7 @@ public class CssAnalyzer extends LexicalAnalyzer {
             initState();
         } else {//sigue avanzado
             //validar si se trata de una excepcion
+            concat();
             isException();
         }
     }

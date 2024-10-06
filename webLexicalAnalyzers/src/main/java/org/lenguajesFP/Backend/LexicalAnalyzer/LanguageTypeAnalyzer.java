@@ -10,6 +10,7 @@ import org.lenguajesFP.Backend.enums.LexicalState;
 import org.lenguajesFP.Backend.exceptions.LexicalAnalyzerException;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.lenguajesFP.Backend.enums.LexicalState.html;
 
@@ -26,6 +27,7 @@ public class LanguageTypeAnalyzer extends LexicalAnalyzer{
         this.possibleToken = new PossibleToken();
         this.htmlTokens = htmlOutput;
         this.cssTokens = cssOutput;
+        System.out.println("2 cssTokens: " + cssTokens);
         this.jsTokens = jsOutput;
 
         try {
@@ -34,14 +36,16 @@ public class LanguageTypeAnalyzer extends LexicalAnalyzer{
             System.out.println("SE ACABO XDD");
         }
 
-        System.out.println("retornando al archivo de texto "+outputCode);
-        System.out.println("tokens hallados de HTML");
-        for (String token : htmlOutput) {
-            System.out.println(token);
-        }
-        System.out.println("tokens hallados de CSS");
-        for (String token : htmlOutput) {
-            System.out.println(token);
+        System.out.println("Escritura html");
+        String finalHtml = htmlTokens.stream().collect(Collectors.joining());
+        System.out.println(finalHtml);
+        System.out.println("Escritura CSS");
+        String finalCss = cssTokens.stream().collect(Collectors.joining());
+        System.out.println(finalCss);
+        System.out.println("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
+        System.out.println("Token hallados:");
+        for (Token token : tokens) {
+            System.out.println(token.getLexeme() + " " + token.getType());
         }
         System.out.println("errores hallados");
         for (Token token : errors) {
@@ -52,7 +56,6 @@ public class LanguageTypeAnalyzer extends LexicalAnalyzer{
     }
 
     private void initState() throws ArrayIndexOutOfBoundsException, LexicalAnalyzerException{
-        try {
             if (isSpace(input[index.get()])){
                 next();
                 initState();
@@ -61,10 +64,6 @@ public class LanguageTypeAnalyzer extends LexicalAnalyzer{
                 next();
                 wordState();
             }
-        } catch (ArrayIndexOutOfBoundsException e) {
-            e.printStackTrace();
-        }
-
     }
 
     private void wordState() throws ArrayIndexOutOfBoundsException, LexicalAnalyzerException{
@@ -93,8 +92,8 @@ public class LanguageTypeAnalyzer extends LexicalAnalyzer{
                 possibleToken.reStart();
                 System.out.println("redirigiendo al analizador de codigo css");
                 CssAnalyzer cssAnalyzer = new CssAnalyzer();
-                outputCode = cssTokens;
                 System.out.println("css tokens es: "+cssTokens);
+                outputCode = cssTokens;
                 cssAnalyzer.readCss(this);
             } else if (LexicalState.js.isLexicalState(possibleToken.getPossibleToken())){
                 tokens.add(new Token(possibleToken.getPossibleToken(),"Estado", possibleToken.getPossibleToken(),"", index.getRow(), index.getColumn()));

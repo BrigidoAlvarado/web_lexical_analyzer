@@ -63,6 +63,9 @@ public class LexicalAnalyzer {
         column = analyzer.getColumn();
         possibleToken = analyzer.getPossibleToken();
         input = analyzer.getInput();
+        htmlTokens = analyzer.getHtmlTokens();
+        cssTokens = analyzer.getCssTokens();
+        jsTokens = analyzer.getJsTokens();
 
     }
 
@@ -106,6 +109,18 @@ public class LexicalAnalyzer {
         return possibleToken;
     }
 
+    public List<String> getHtmlTokens() {
+        return htmlTokens;
+    }
+
+    public List<String> getCssTokens() {
+        return cssTokens;
+    }
+
+    public List<String> getJsTokens() {
+        return jsTokens;
+    }
+
     public boolean isLessLetter(char c){
         return letters.contains(String.valueOf(c));
     }
@@ -121,6 +136,7 @@ public class LexicalAnalyzer {
     protected char current(){
         return input[index.get()];
     }
+
 
     protected void readExceptionToken(){
         //if ()

@@ -17,17 +17,21 @@ public class Combinator extends LexicalAnalyzer {
             ' '
     ));
 
-    private boolean isToken = false;
+    private boolean isToken;
 
     public Combinator(LexicalAnalyzer languageTypeAnalyzer) {
         initVars(languageTypeAnalyzer);
     }
 
     public boolean isCharacterToken() {
+        isToken = false;
+        System.out.println("evaluando: " + current() );
         if (COMBINATOR.contains(current())) {
+            System.out.println("contenido en el arreglo");
             isToken = true;
             if (current() == ' '){
                 isToken = validateSpace();
+                System.out.println("token espacio; " + isToken);
             }
         }
         return isToken;
