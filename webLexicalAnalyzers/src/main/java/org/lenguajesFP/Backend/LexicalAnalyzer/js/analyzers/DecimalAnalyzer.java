@@ -21,6 +21,7 @@ public class DecimalAnalyzer extends LexicalAnalyzer {
 
     private void initStatus() {
         if (isNumber(current())){
+            concat();
             next();
             numberStatus();
         }

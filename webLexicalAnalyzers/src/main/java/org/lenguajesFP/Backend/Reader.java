@@ -18,7 +18,7 @@ public class Reader {
     Index index = new Index();
 
     public void readCode(String input) throws LexicalAnalyzerException {
-        this.input = input.toCharArray();
+        this.input = (input + "     ").toCharArray();
         LanguageTypeAnalyzer analyzer = new LanguageTypeAnalyzer();
          analyzer.read(
                 tokens,

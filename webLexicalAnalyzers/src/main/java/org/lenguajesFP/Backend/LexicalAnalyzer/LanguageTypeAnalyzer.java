@@ -4,6 +4,7 @@ import org.lenguajesFP.Backend.Index;
 import org.lenguajesFP.Backend.LexicalAnalyzer.css.CssAnalyzer;
 import org.lenguajesFP.Backend.LexicalAnalyzer.html.HtmlAnalyzer;
 import org.lenguajesFP.Backend.LexicalAnalyzer.js.JsAnalyzer;
+import org.lenguajesFP.Backend.LexicalAnalyzer.js.enums.CharacterToken;
 import org.lenguajesFP.Backend.PossibleToken;
 import org.lenguajesFP.Backend.Token;
 import org.lenguajesFP.Backend.TokenError;
@@ -45,6 +46,7 @@ public class LanguageTypeAnalyzer extends LexicalAnalyzer{
         System.out.println(finalCss);
         System.out.println("Escritura JS");
         String finalJs = jsTokens.stream().collect(Collectors.joining());
+        System.out.println(finalJs);
         System.out.println("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
         System.out.println("Token hallados:");
         for (Token token : tokens) {
@@ -117,4 +119,5 @@ public class LanguageTypeAnalyzer extends LexicalAnalyzer{
                 initState();
             }
     }
+
 }
