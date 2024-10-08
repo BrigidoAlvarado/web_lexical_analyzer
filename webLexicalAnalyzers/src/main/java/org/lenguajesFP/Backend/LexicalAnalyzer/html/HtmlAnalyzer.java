@@ -23,8 +23,6 @@ public class HtmlAnalyzer extends LexicalAnalyzer {
 
     private void initState() throws ArrayIndexOutOfBoundsException, LexicalAnalyzerException{
 
-        System.out.println("iniciando a leer el posible codigo html");
-
         if (isSpace(input[index.get()])){
             outputTag = saveCurrentChar(outputTag);
             next();
@@ -53,11 +51,6 @@ public class HtmlAnalyzer extends LexicalAnalyzer {
     }
 
     private void lessState() throws ArrayIndexOutOfBoundsException, LexicalAnalyzerException{
-        System.out.println("en less state");
-
-            //el tokenn puede ser el nombre de la etiqueta
-
-            System.out.println("puede ser el nombre de una etiqueta");
 
             tagTokens.add(new Token(possibleToken.getPossibleToken(),"Etiquetas_de_Apertura", possibleToken.getPossibleToken(), "HTML", index.getRow(), index.getColumn()));
             possibleToken.reStart();
@@ -66,11 +59,7 @@ public class HtmlAnalyzer extends LexicalAnalyzer {
 
     private void tagNameState() throws ArrayIndexOutOfBoundsException, LexicalAnalyzerException{
         TagName tagName = new TagName();
-        System.out.println("en tagname state");
-        //el nombre de la etiqueta es valido
-
         if (tagName.readTag(languageTypeAnalyzer)){
-            System.out.println("el nombre de la etiqueta fue aprobada");
             tagTokens.add(new Token(
                     possibleToken.getPossibleToken(),
                     "Palabra Reservada",
@@ -121,14 +110,19 @@ public class HtmlAnalyzer extends LexicalAnalyzer {
         // Se puede tratar de una etiqueta de cierre
 
         if (input[index.get()] == '/'
-        && !possibleToken.getPossibleToken().equalsIgnoreCase(HtmlTag.area.name())
         && !possibleToken.getPossibleToken().equalsIgnoreCase(HtmlTag.entrada.name())){
             next();
             if (input[index.get()] == '>' ){
+                System.out.println("guardando la etiqueta: "+possibleToken.getPossibleToken());
+                if (possibleToken.getPossibleToken().equalsIgnoreCase(HtmlTag.entrada.name())){
+                    System.out.println("es un area");
+                    outputTag += HtmlTag.valueOf(possibleToken.getPossibleToken()).getTranslate() + "/>";
+                    tagTokens.add(new Token( "/>", "Etiqueta cierre", "/>", "HTML", index.getRow(), index.getColumn()));
+                } else{
+                    outputTag += "/" + HtmlTag.valueOf(possibleToken.getPossibleToken()).getTranslate() + ">";
+                    tagTokens.add(new Token( "/>", "Etiqueta cierre", "/>", "HTML", index.getRow(), index.getColumn()));                }
                 //System.out.println("es una etiqueta de cierre");
                 //imprimir la traduccion
-                outputTag += "/" + HtmlTag.valueOf(possibleToken.getPossibleToken()).getTranslate() + ">";
-                tagTokens.add(new Token( "/>", "Etiqueta cierre", "/>", "HTML", index.getRow(), index.getColumn()));
                 possibleToken.reStart();
                 saveTag();
                 next();

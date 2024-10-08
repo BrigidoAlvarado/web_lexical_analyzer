@@ -10,16 +10,15 @@ public class TagName extends HtmlAnalyzer{
     public boolean readTag(LanguageTypeAnalyzer languageTypeAnalyzer) throws ArrayIndexOutOfBoundsException {
         super.initVars(languageTypeAnalyzer);
         initState();
+        System.out.println("retornando "+approved);
         return approved;
     }
 
     private void initState() throws ArrayIndexOutOfBoundsException{
-        System.out.println("en el estado inicial de tag name "+input[index.get()]);
         if (isSpace(input[index.get()])){
             next();
             initState();
         } else if(isLessLetter(input[index.get()])){
-            System.out.println("es una letra");
             concat();
             next();
             tagNameState();
@@ -32,9 +31,9 @@ public class TagName extends HtmlAnalyzer{
         if (isSpace(input[index.get()]) || input[index.get()] == '/' || input[index.get()] == '>'){
             //validar si es una palabra reservada
             approved = isReservedWord();
+            System.out.println("evaluando "+possibleToken.getPossibleToken());
             System.out.println("la palabra reservada es: " + approved);
         } else if( isLessLetterOrNumber(input[index.get()])){
-            System.out.println("es una letra otra vez");
           concat();
           next();
           tagNameState();
@@ -45,8 +44,7 @@ public class TagName extends HtmlAnalyzer{
 
     private boolean isReservedWord() throws ArrayIndexOutOfBoundsException{
         try {
-            System.out.println("la posible palabra reservada es: " + possibleToken.getPossibleToken());
-            HtmlTag tag = HtmlTag.valueOf(possibleToken.getPossibleToken());
+            HtmlTag.valueOf(possibleToken.getPossibleToken());
             return true;
         } catch (IllegalArgumentException e) {
             return false;

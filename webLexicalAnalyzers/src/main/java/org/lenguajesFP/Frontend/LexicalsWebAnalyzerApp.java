@@ -33,7 +33,6 @@ public class LexicalsWebAnalyzerApp extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
 
         containerjPnl = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
@@ -97,7 +96,7 @@ public class LexicalsWebAnalyzerApp extends javax.swing.JFrame {
         });
         jScrllPnInput.setViewportView(InputjTxtAr);
 
-        textAreasContainerjPnl.add(jScrllPnInput, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 430, 730));
+        textAreasContainerjPnl.add(jScrllPnInput, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 520, 480));
 
         OutputjTxtAr.setEditable(false);
         OutputjTxtAr.setColumns(20);
@@ -109,9 +108,9 @@ public class LexicalsWebAnalyzerApp extends javax.swing.JFrame {
         });
         jScrllPnlOutput.setViewportView(OutputjTxtAr);
 
-        textAreasContainerjPnl.add(jScrllPnlOutput, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 16, 460, 720));
+        textAreasContainerjPnl.add(jScrllPnlOutput, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 20, 550, 480));
 
-        getContentPane().add(textAreasContainerjPnl, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 60, 960, 750));
+        getContentPane().add(textAreasContainerjPnl, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, 1130, 520));
 
         fileMenu.setMnemonic('f');
         fileMenu.setText("File");
