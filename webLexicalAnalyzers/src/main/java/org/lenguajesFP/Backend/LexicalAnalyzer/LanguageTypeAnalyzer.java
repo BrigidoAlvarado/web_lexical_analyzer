@@ -3,6 +3,7 @@ package org.lenguajesFP.Backend.LexicalAnalyzer;
 import org.lenguajesFP.Backend.Index;
 import org.lenguajesFP.Backend.LexicalAnalyzer.css.CssAnalyzer;
 import org.lenguajesFP.Backend.LexicalAnalyzer.html.HtmlAnalyzer;
+import org.lenguajesFP.Backend.LexicalAnalyzer.js.JsAnalyzer;
 import org.lenguajesFP.Backend.PossibleToken;
 import org.lenguajesFP.Backend.Token;
 import org.lenguajesFP.Backend.TokenError;
@@ -42,6 +43,8 @@ public class LanguageTypeAnalyzer extends LexicalAnalyzer{
         System.out.println("Escritura CSS");
         String finalCss = cssTokens.stream().collect(Collectors.joining());
         System.out.println(finalCss);
+        System.out.println("Escritura JS");
+        String finalJs = jsTokens.stream().collect(Collectors.joining());
         System.out.println("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
         System.out.println("Token hallados:");
         for (Token token : tokens) {
@@ -92,12 +95,15 @@ public class LanguageTypeAnalyzer extends LexicalAnalyzer{
                 possibleToken.reStart();
                 System.out.println("redirigiendo al analizador de codigo css");
                 CssAnalyzer cssAnalyzer = new CssAnalyzer();
-                System.out.println("css tokens es: "+cssTokens);
                 outputCode = cssTokens;
                 cssAnalyzer.readCss(this);
             } else if (LexicalState.js.isLexicalState(possibleToken.getPossibleToken())){
                 tokens.add(new Token(possibleToken.getPossibleToken(),"Estado", possibleToken.getPossibleToken(),"", index.getRow(), index.getColumn()));
                 possibleToken.reStart();
+                System.out.println("redirigiendo al analizador js");
+                JsAnalyzer jsAnalyzer = new JsAnalyzer();
+                outputCode = jsTokens;
+                jsAnalyzer.readJs(this);
                 //redirect
             } else{
                 errors.add(new TokenError(possibleToken.getPossibleToken(), "Analizador de estados","", index.getRow(), index.getColumn()));
