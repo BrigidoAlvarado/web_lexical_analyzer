@@ -11,30 +11,41 @@ public class OfClassOrOfId extends LexicalAnalyzer {
 
     private  char initChar;
     private boolean isToken = false;
-    private char[] chars;
-    private int count = 0;
     private String type;
+    private int saveIndex;
+    private int saveRow;
+    private int saveCol;
+
+    private final Other other;
+    private final Universal universal;
+    private final Combinator combinator;
 
     public OfClassOrOfId(LanguageTypeAnalyzer languageTypeAnalyzer) {
         super.initVars(languageTypeAnalyzer);
+        other = new Other(languageTypeAnalyzer);
+        universal = new Universal(languageTypeAnalyzer);
+        combinator = new Combinator(languageTypeAnalyzer);
     }
 
     public boolean isToken(char initChar){
+        saveIndex = index.get();
+        saveRow = index.getRow();
+        saveCol = index.getColumn();
+        isToken = false;
         this.initChar = initChar;
-        serType();
-        chars = possibleToken.getPossibleToken().toCharArray();
-        count = 0;
-        try{
-            initState();
-        }catch (ArrayIndexOutOfBoundsException e){
-            return isToken;
-        }
+        setType();
+        initState();
+        /*if (isToken == false && initChar == '#'){
+            possibleToken.reStart();
+            index.reStart(saveIndex,saveRow,saveCol);
+        }*/
         return isToken;
     }
 
     private void initState(){
-        if (chars[count] == initChar){
-            count++;
+        if (current() == initChar){
+            concat();
+            next();
             pointState();
         }else{
             isToken = false;
@@ -42,9 +53,10 @@ public class OfClassOrOfId extends LexicalAnalyzer {
     }
 
     private void pointState(){
-        if (isLessLetter(chars[count])){
+        if (isLessLetter(current())){
+            concat();
             isToken = true;
-            count++;
+            next();
             acceptanceStatus();
         }else{
             isToken = false;
@@ -52,10 +64,13 @@ public class OfClassOrOfId extends LexicalAnalyzer {
     }
 
     private void acceptanceStatus(){
-        if (isLessLetterOrNumber(chars[count]) || chars[count] == '-'){
+        if (isLessLetterOrNumber(current()) || current() == '-'){
+            concat();
             isToken = true;
-            count++;
+            next();
             acceptanceStatus();
+        } else if (isSpace(current()) || combinator.isCharacterToken() || other.isCharacterToken() || universal.isCharacterToken()) {
+            isToken = true;
         } else{
             isToken = false;
         }
@@ -67,13 +82,14 @@ public class OfClassOrOfId extends LexicalAnalyzer {
                 type,
                 possibleToken.getPossibleToken(),
                 "CSS",
-                index.getRow() - 1,
-                index.getColumn() - 1)
+                index.getRow() ,
+                index.getColumn() )
         );
         outputCode.add(possibleToken.getPossibleToken());
+        possibleToken.reStart();
     }
 
-    private void serType(){
+    private void setType(){
         if (initChar == '.'){
             type = TYPE_CLASS;
         } else if (initChar == '#'){

@@ -9,21 +9,20 @@ public class Other extends LexicalAnalyzer {
 
     public static final String ESPECIAL_TOKEN = "'[A-Za-z]'";
     public static final String TYPE = "Otros";
-    //public static final String
 
     public static final List<String> OTHERS = List.of("::after","::before",":active",":hover","px","rem","em","vw","vh","odd","even");
 
-    public static final String EXCEPTION_TOKEN = ":not()";
+    public static final List<String> EXCEPTION_TOKENS = List.of(":not()", ":nth-child()");
 
-    public static final String EXCEPTION_WORD = ":not";
+    public static final String EXCEPTION_WORD = ":n";
 
-    public static final List<Character> OTHER_CHARS = List.of('%',';',',','(',')','{','}');
+    public static final List<Character> OTHER_CHARS = List.of('%',';',',','(',')','{','}',':');
 
     public static final Character CHAR_EXCEPTIONS = ':';
 
     private boolean isToken = false;
-    private Combinator combinator;
-    private Universal universal;
+    private  final Combinator combinator;
+    private final Universal universal;
 
     public Other(LexicalAnalyzer lexicalAnalyzer) {
         initVars(lexicalAnalyzer);
@@ -32,15 +31,19 @@ public class Other extends LexicalAnalyzer {
     }
 
     public boolean isCharacterToken(){
+        System.out.println("is character token evaluando "+current());
         if (OTHER_CHARS.contains(current())){
-            isToken = true;
-        } else if (current() == CHAR_EXCEPTIONS){
-            isToken = isOtherExceptions();
+            System.out.println("is other character token evaluando "+current());
+            if (current() == CHAR_EXCEPTIONS){
+                System.out.println("is current character token evaluando "+current());
+                return isOtherExceptions();
+            }
+            return true;
         }
-        return isToken;
+        return false;
     }
 
-    public void saveCharToken(String token){
+    public void saveToken(String token){
         tokens.add(new Token(
                 token,
                 TYPE,
@@ -49,34 +52,39 @@ public class Other extends LexicalAnalyzer {
                 index.getRow(),
                 index.getColumn()
         ));
-        outputCode.add(String.valueOf(current()));
+
     }
 
     private boolean isOtherExceptions(){
+        System.out.println("is other exceptions "+input[index.get()+1]);
         return (isSpace(input[index.get() + 1]));
     }
 
     public boolean isExceptionWord() {
-        boolean isToken = false;
-        if (possibleToken.getPossibleToken().equalsIgnoreCase(EXCEPTION_WORD)) {
-
-            if (
-                    combinator.isCharacterToken() ||
-                    universal.isCharacterToken() || isSpace(current()) ||
-                    (this.isCharacterToken() && current() != '(' && current() != ')'))
-            {
-                    isToken = (possibleToken.getPossibleToken().equalsIgnoreCase(EXCEPTION_TOKEN));
-
-            }  else {
-                concat();
-                next();
-                isExceptionWord();
-            }
+        isToken = false;
+        if (possibleToken.getPossibleToken().equals(EXCEPTION_WORD)){
+            next();
+            readException();
         }
         return isToken;
     }
 
     public boolean isToken(){
         return OTHERS.contains(possibleToken.getPossibleToken());
+    }
+
+    private void readException(){
+        if ((isSpace(current())
+                || isCharacterToken()
+                || combinator.isCharacterToken()
+                || universal.isCharacterToken())
+                && current() != '(' && current() != ')'
+        ){
+            isToken = EXCEPTION_TOKENS.contains(possibleToken.getPossibleToken());
+        } else {
+            concat();
+            next();
+            readException();
+        }
     }
 }

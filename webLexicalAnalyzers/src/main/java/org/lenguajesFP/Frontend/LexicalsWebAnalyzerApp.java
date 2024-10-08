@@ -193,9 +193,11 @@ public class LexicalsWebAnalyzerApp extends javax.swing.JFrame {
 
         try {
             Reader reader = new Reader();
-            List<String> output = reader.readCode(input);
-            String outputText = output.stream().collect(Collectors.joining());
-            OutputjTxtAr.setText(outputText);
+            reader.readCode(input);
+            String html = reader.getHtmlTokens().stream().collect(Collectors.joining());
+            String css = reader.getCssTokens().stream().collect(Collectors.joining());
+            String js = reader.getJsTokens().stream().collect(Collectors.joining());
+            OutputjTxtAr.setText(html + css + js);
 
         } catch (LexicalAnalyzerException e) {
             JOptionPane.showMessageDialog(this, "ANALISIS FINALIZADO", e.getMessage(), JOptionPane.INFORMATION_MESSAGE);

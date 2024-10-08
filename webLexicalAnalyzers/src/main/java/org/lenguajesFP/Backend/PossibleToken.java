@@ -18,4 +18,8 @@ public class PossibleToken {
     public String getPossibleToken() {
         return possibleToken;
     }
+
+    public void setPossibleToken(String possibleToken) {
+        this.possibleToken = possibleToken;
+    }
 }

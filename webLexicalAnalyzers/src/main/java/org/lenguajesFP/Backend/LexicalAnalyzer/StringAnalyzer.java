@@ -1,5 +1,6 @@
 package org.lenguajesFP.Backend.LexicalAnalyzer;
 
+import org.lenguajesFP.Backend.LexicalAnalyzer.css.tokenAnalyzer.Other;
 import org.lenguajesFP.Backend.Token;
 import org.lenguajesFP.Backend.TokenError;
 import org.lenguajesFP.Backend.exceptions.InvalidTokenException;
@@ -17,8 +18,6 @@ public class StringAnalyzer extends LexicalAnalyzer {
     protected char endSymnbol;
 
     public StringAnalyzer(LanguageTypeAnalyzer languageTypeAnalyzer, List<Token> tagToken, String language) throws LexicalAnalyzerException {
-
-        System.out.println("iniciando string analyzer");
         this.language = language;
         this.tagToken = tagToken;
         this.languageTypeAnalyzer = languageTypeAnalyzer;
@@ -28,7 +27,12 @@ public class StringAnalyzer extends LexicalAnalyzer {
     }
 
     public StringAnalyzer(LanguageTypeAnalyzer languageTypeAnalyzer, List<Token> tagToken, String language, char startSymbol, char endSymbol) throws LexicalAnalyzerException {
-
+        this.language = language;
+        this.tagToken = tagToken;
+        this.languageTypeAnalyzer = languageTypeAnalyzer;
+        super.initVars(this.languageTypeAnalyzer);
+        this.startSymbol = startSymbol;
+        this.endSymnbol = endSymbol;
     }
 
 
@@ -69,13 +73,24 @@ public class StringAnalyzer extends LexicalAnalyzer {
 
     protected void finalState() throws ArrayIndexOutOfBoundsException{
         approved = true;
-        tagToken.add( new Token(
-                possibleToken.getPossibleToken(),
-                "cadena",
-                "\"([^\"\\\\]*(\\\\.[^\"\\\\]*)*)\"\n",
-                language,
-                index.getRow(),
-                index.getColumn()
-        ));
+        if (possibleToken.getPossibleToken().equals(Other.ESPECIAL_TOKEN)){
+            tagToken.add( new Token(
+                    possibleToken.getPossibleToken(),
+                    "Otros",
+                    possibleToken.getPossibleToken(),
+                    "CSS",
+                    index.getRow(),
+                    index.getColumn()
+            ));
+        } else {
+            tagToken.add( new Token(
+                    possibleToken.getPossibleToken(),
+                    "cadena",
+                    "\"([^\"\\\\]*(\\\\.[^\"\\\\]*)*)\"\n",
+                    language,
+                    index.getRow(),
+                    index.getColumn()
+            ));
+        }
     }
 }

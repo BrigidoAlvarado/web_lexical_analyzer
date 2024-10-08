@@ -81,5 +81,6 @@ public class CommentAnalyzer extends LexicalAnalyzer{
                 index.getRow(),
                 index.getColumn()
         ));
+        getPossibleToken().reStart();
     }
 }

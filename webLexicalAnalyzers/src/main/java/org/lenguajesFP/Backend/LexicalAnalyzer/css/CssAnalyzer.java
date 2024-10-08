@@ -1,10 +1,8 @@
 package org.lenguajesFP.Backend.LexicalAnalyzer.css;
 
-import org.lenguajesFP.Backend.LexicalAnalyzer.CommentAnalyzer;
-import org.lenguajesFP.Backend.LexicalAnalyzer.LanguageTypeAnalyzer;
-import org.lenguajesFP.Backend.LexicalAnalyzer.LexicalAnalyzer;
-import org.lenguajesFP.Backend.LexicalAnalyzer.StringAnalyzer;
+import org.lenguajesFP.Backend.LexicalAnalyzer.*;
 import org.lenguajesFP.Backend.LexicalAnalyzer.css.tokenAnalyzer.*;
+import org.lenguajesFP.Backend.TokenError;
 import org.lenguajesFP.Backend.exceptions.InvalidTokenException;
 import org.lenguajesFP.Backend.exceptions.LexicalAnalyzerException;
 
@@ -17,6 +15,10 @@ public class CssAnalyzer extends LexicalAnalyzer {
     private Universal universal;
     private OfClassOrOfId ofClass;
     private LanguageTypeAnalyzer languageTypeAnalyzer;
+    private HexadecimalColor hexadecimalColor;
+    private RgbColor rgbColor;
+    private Identifier identifier;
+    private IntegerAnalyzer integerAnalyzer;
 
     public void readCss(LanguageTypeAnalyzer languageTypeAnalyzer) throws LexicalAnalyzerException {
         this.languageTypeAnalyzer = languageTypeAnalyzer;
@@ -27,41 +29,70 @@ public class CssAnalyzer extends LexicalAnalyzer {
         tagOrType = new TagOrType(this.languageTypeAnalyzer);
         universal = new Universal(this.languageTypeAnalyzer);
         ofClass = new OfClassOrOfId(this.languageTypeAnalyzer);
-        outputCode = cssTokens;
+        hexadecimalColor = new HexadecimalColor(this.languageTypeAnalyzer);
+        rgbColor = new RgbColor(this.languageTypeAnalyzer);
+        identifier = new Identifier(this.languageTypeAnalyzer);
+        integerAnalyzer = new IntegerAnalyzer(this.languageTypeAnalyzer);
         initState();
     }
 
     private void initState() throws LexicalAnalyzerException {
 
-         if (input[index.get()] == '>'){//cambio de estado
+         if (current() == '>' && input[index.get() + 1] == '>'){//cambio de estado
             languageTypeAnalyzer.read(tokens,errors,outputCode,input,index, htmlTokens, cssTokens, jsTokens);
-        } else if (input[index.get()] == '/'){//cometario
+
+         } else if (input[index.get()] == '/'){//cometario
             CommentAnalyzer commentAnalyzer = new CommentAnalyzer(languageTypeAnalyzer);
             commentAnalyzer.readComment("CSS");
             initState();
-        } else if (isSpace(input[index.get()]) && current() != ' '){//tabulacion o salto de linea
-             outputCode.add(String.valueOf(input[index.get()]));
+
+         } else if (isSpace(input[index.get()]) && current() != ' '){//tabulacion o salto de linea
+             outputCode.add(String.valueOf(current()));
              next();
              initState();
-         } else if (current() == '`') {
+         } else if (current() == '`') {//cadena
              StringAnalyzer stringAnalyzer = new StringAnalyzer(languageTypeAnalyzer,tokens,"CSS",'`','`');
+             System.out.println("el valor del indice es en css analyzer "+index);
              try {
-                 stringAnalyzer.readString();
+                 if (stringAnalyzer.readString()){
+                     outputCode.add(possibleToken.getPossibleToken());
+                     possibleToken.reStart();
+                     next();
+                     initState();
+                 }
              }catch (InvalidTokenException e){
                  errors.add(e.getError());
                  next();
                  initState();
              }
-         } else if (current() == '\'') {
+         } else if (current() == '\'') {//cadena
              StringAnalyzer stringAnalyzer = new StringAnalyzer(languageTypeAnalyzer,tokens,"CSS",'\'','\'');
              try {
-                 stringAnalyzer.readString();
+                 if (stringAnalyzer.readString()){
+                     outputCode.add(possibleToken.getPossibleToken());
+                     possibleToken.reStart();
+                     next();
+                     initState();
+                 }
              }catch (InvalidTokenException e){
                  errors.add(e.getError());
                  next();
                  initState();
              }
-         } else {//es un caracter
+         } else if (ofClass.isToken('.')){//identificador
+             ofClass.saveToken();
+             initState();
+         } else if (current() == '#'){
+              if (hexadecimalColor.isToken()) {//color hexadecimal
+                 hexadecimalColor.saveToken();
+                 initState();
+             } else if (ofClass.isToken('#')) {
+                 ofClass.saveToken();
+                 initState();
+             } else {
+
+              }
+         }  else {//es un caracter
             characterState();
         }
     }
@@ -69,22 +100,23 @@ public class CssAnalyzer extends LexicalAnalyzer {
     private void characterState() throws LexicalAnalyzerException {
 
         if (combinator.isCharacterToken()){ //el caracter puede ser un token del tipo combinador
-            isPossibleToken();
+            //isPossibleToken();
             combinator.saveToken();
             next();
             initState();
         } else if (other.isCharacterToken()){// el caraceter puede ser un token del tipo otros
-            isPossibleToken();
-            other.saveCharToken(String.valueOf(current()));
+            //isPossibleToken();
+            other.saveToken(String.valueOf(current()));
+            outputCode.add(String.valueOf(current()));
             next();
             initState();
         } else if (universal.isCharacterToken()){// el caracter puede ser un token del tipo universal
-            isPossibleToken();
+            //isPossibleToken();
             universal.saveToken();
             next();
             initState();
         } else if (isSpace(current()) && possibleToken.getPossibleToken() != null){//termina la palabra y esta puede ser un token
-            isPossibleToken();
+            //isPossibleToken();
             next();
             initState();
         } else if (isSpace(current())){// si el espacio no es token
@@ -100,10 +132,15 @@ public class CssAnalyzer extends LexicalAnalyzer {
 
     private void isException() throws LexicalAnalyzerException {
         if (other.isExceptionWord()){
-            other.saveCharToken(possibleToken.getPossibleToken());
+            other.saveToken(possibleToken.getPossibleToken());
+            outputCode.add(possibleToken.getPossibleToken());
             possibleToken.reStart();
             initState();
+        } else if (rgbColor.isToken()){
+            rgbColor.saveToken();
+            initState();
         } else {
+            System.out.println("no es una exepcion "+possibleToken.getPossibleToken());
             isPossibleToken();
             next();
             initState();
@@ -111,22 +148,40 @@ public class CssAnalyzer extends LexicalAnalyzer {
     }
 
     private void isPossibleToken() throws LexicalAnalyzerException {
+        System.out.println("actual "+current());
         if (possibleToken.getPossibleToken() != null){
             if (tagOrType.isToken()){
                 tagOrType.saveToken();
-            } else if (ofClass.isToken('.')){
-                ofClass.saveToken();
-            } else if (ofClass.isToken('#')) {
-                ofClass.saveToken();
             } else if (other.isToken()){
-                other.saveCharToken(possibleToken.getPossibleToken());
-            } else if (rule.isToken()) {
-                rule.saveToken();
-            } else if (rule.isKey()) {
+                other.saveToken(possibleToken.getPossibleToken());
+                outputCode.add(possibleToken.getPossibleToken());
+                possibleToken.reStart();
+            }  else if (rule.isKey()) {
                 next();
                 initState();
-            }// VALIDAR IDENTIFICADORES
-            //validar errores
+            }else if (rule.isToken()) {
+                rule.saveToken();
+            }else if (identifier.isToken()) {//
+                identifier.saveToken();
+                initState();
+            } else if (integerAnalyzer.isToken()) {
+                integerAnalyzer.saveToken("CSS");
+                next();
+                initState();
+            } else if (isSpace(input[index.get()+1])) {
+                saveError();
+            }
         }
+    }
+
+    private void saveError(){
+        errors.add(new TokenError(
+                possibleToken.getPossibleToken(),
+                null,
+                "CSS",
+                index.getRow(),
+                index.getColumn()
+        ));
+        possibleToken.reStart();
     }
 }

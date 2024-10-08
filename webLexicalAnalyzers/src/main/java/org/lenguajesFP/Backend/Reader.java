@@ -17,11 +17,10 @@ public class Reader {
     char[] input;
     Index index = new Index();
 
-    public List<String> readCode(String input) throws LexicalAnalyzerException {
+    public void readCode(String input) throws LexicalAnalyzerException {
         this.input = input.toCharArray();
         LanguageTypeAnalyzer analyzer = new LanguageTypeAnalyzer();
-        System.out.println("1 cssOutput "+cssTokens);
-        return analyzer.read(
+         analyzer.read(
                 tokens,
                 errors,
                 outputCode
@@ -30,5 +29,17 @@ public class Reader {
                 htmlTokens,
                 cssTokens,
                 jsTokens);
+    }
+    
+    public List<String> getHtmlTokens(){
+        return htmlTokens;
+    }
+    
+    public List<String> getCssTokens(){
+        return cssTokens;
+    }
+    
+    public List<String> getJsTokens(){
+        return  jsTokens;
     }
 }

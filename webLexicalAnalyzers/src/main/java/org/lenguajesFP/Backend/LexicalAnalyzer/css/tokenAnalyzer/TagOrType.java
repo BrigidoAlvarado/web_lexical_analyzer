@@ -38,12 +38,21 @@ public class TagOrType extends LexicalAnalyzer{
 
     public static final String TYPE = "Etiqueta o Tipo";
 
-    public TagOrType(LanguageTypeAnalyzer languageTypeAnalyzer) {
+    public TagOrType(LexicalAnalyzer languageTypeAnalyzer) {
         super.initVars(languageTypeAnalyzer);
     }
 
     public boolean isToken(){
-        return TAG_OR_TYPE.contains(possibleToken.getPossibleToken());
+        if (TAG_OR_TYPE.contains(possibleToken.getPossibleToken())){
+            if (possibleToken.getPossibleToken().equalsIgnoreCase("a") && isLetter(input[index.get() + 1])){
+                return false;
+            }
+            if (possibleToken.getPossibleToken().equalsIgnoreCase("p") && isLetter(input[index.get() + 1])){
+                return false;
+            }
+            return true;
+        }
+        return false;
     }
 
     public void saveToken(){
@@ -56,6 +65,7 @@ public class TagOrType extends LexicalAnalyzer{
                 index.getColumn())
         );
         outputCode.add(possibleToken.getPossibleToken());
+        possibleToken.reStart();
     }
 }
 

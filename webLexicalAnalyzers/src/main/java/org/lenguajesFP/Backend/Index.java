@@ -38,4 +38,10 @@ public class Index {
     public int getColumn( ) {
         return column;
     }
+
+    public void reStart(int index, int row, int column){
+        this.index = index;
+        this.row = row;
+        this.column = column;
+    }
 }

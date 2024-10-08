@@ -137,8 +137,11 @@ public class LexicalAnalyzer {
         return input[index.get()];
     }
 
+    protected boolean isCapitalLetter(char c){
+        return capitalLetters.contains(String.valueOf(c));
+    }
 
-    protected void readExceptionToken(){
-        //if ()
+    protected boolean isNumber(char c){
+        return numbers.contains(String.valueOf(c));
     }
 }

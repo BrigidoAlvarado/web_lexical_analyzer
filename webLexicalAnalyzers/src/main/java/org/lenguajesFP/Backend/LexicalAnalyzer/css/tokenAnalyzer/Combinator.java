@@ -1,6 +1,4 @@
 package org.lenguajesFP.Backend.LexicalAnalyzer.css.tokenAnalyzer;
-
-import org.lenguajesFP.Backend.LexicalAnalyzer.LanguageTypeAnalyzer;
 import org.lenguajesFP.Backend.LexicalAnalyzer.LexicalAnalyzer;
 import org.lenguajesFP.Backend.Token;
 
@@ -14,7 +12,8 @@ public class Combinator extends LexicalAnalyzer {
             '>',
             '+',
             '~',
-            ' '
+            ' ',
+            '>'
     ));
 
     private boolean isToken;
@@ -25,13 +24,10 @@ public class Combinator extends LexicalAnalyzer {
 
     public boolean isCharacterToken() {
         isToken = false;
-        System.out.println("evaluando: " + current() );
         if (COMBINATOR.contains(current())) {
-            System.out.println("contenido en el arreglo");
             isToken = true;
             if (current() == ' '){
                 isToken = validateSpace();
-                System.out.println("token espacio; " + isToken);
             }
         }
         return isToken;
