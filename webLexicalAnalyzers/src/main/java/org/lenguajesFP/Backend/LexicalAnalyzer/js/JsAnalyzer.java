@@ -2,6 +2,7 @@ package org.lenguajesFP.Backend.LexicalAnalyzer.js;
 
 import org.lenguajesFP.Backend.LexicalAnalyzer.*;
 import org.lenguajesFP.Backend.LexicalAnalyzer.js.analyzers.*;
+import org.lenguajesFP.Backend.TokenError;
 import org.lenguajesFP.Backend.exceptions.InvalidTokenException;
 import org.lenguajesFP.Backend.exceptions.LexicalAnalyzerException;
 
@@ -13,6 +14,7 @@ public class JsAnalyzer extends LexicalAnalyzer {
     private IntegerJsAnalyzer integerAnalyzer;
     private DecimalAnalyzer decimalAnalyzer;
     private ReservedWordsAnalyzer reservedWordsAnalyzer;
+    private IdentifierAnalyzer identifierAnalyzer;
 
     public void readJs(LanguageTypeAnalyzer languageTypeAnalyzer) throws LexicalAnalyzerException {
         this.languageTypeAnalyzer = languageTypeAnalyzer;
@@ -22,6 +24,7 @@ public class JsAnalyzer extends LexicalAnalyzer {
         integerAnalyzer = new IntegerJsAnalyzer(languageTypeAnalyzer);
         decimalAnalyzer = new DecimalAnalyzer(languageTypeAnalyzer);
         reservedWordsAnalyzer = new ReservedWordsAnalyzer(languageTypeAnalyzer);
+        identifierAnalyzer = new IdentifierAnalyzer(languageTypeAnalyzer);
         initStatus();
     }
 
@@ -133,16 +136,28 @@ public class JsAnalyzer extends LexicalAnalyzer {
         } else if (reservedWordsAnalyzer.isBoolean()) {
             reservedWordsAnalyzer.saveBoolean();
             initStatus();
+        } else if (identifierAnalyzer.isToken()) {
+            identifierAnalyzer.saveToken();
+            initStatus();
         } else{
             System.out.println("se encontro un error al evaluar: <"+possibleToken.getPossibleToken()+">");
-            possibleToken.reStart();
+            saveError();
             initStatus();
         }
     }
-
+    
     private boolean isFinalWord(){
         return (isSpace(current()) || characterTokenAnalyzer.isToken()) && possibleToken.getPossibleToken() != null;
     }
 
-
+    private void saveError(){
+        errors.add(new TokenError(
+                possibleToken.getPossibleToken(),
+                null,
+                "Javascript",
+                index.getRow(),
+                index.getColumn()
+        ));
+        possibleToken.reStart();
+    }
 }
