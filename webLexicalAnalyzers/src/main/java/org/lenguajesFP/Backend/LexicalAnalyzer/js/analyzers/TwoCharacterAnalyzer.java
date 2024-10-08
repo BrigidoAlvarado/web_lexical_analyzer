@@ -1,7 +1,6 @@
-package org.lenguajesFP.Backend.LexicalAnalyzer.js;
+package org.lenguajesFP.Backend.LexicalAnalyzer.js.analyzers;
 
 import org.lenguajesFP.Backend.LexicalAnalyzer.LexicalAnalyzer;
-import org.lenguajesFP.Backend.LexicalAnalyzer.js.enums.CharacterToken;
 import org.lenguajesFP.Backend.LexicalAnalyzer.js.enums.TwoCharacterToken;
 import org.lenguajesFP.Backend.Token;
 
