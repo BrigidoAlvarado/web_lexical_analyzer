@@ -4,10 +4,11 @@
  */
 package org.lenguajesFP.Frontend;
 
-import java.util.List;
 import java.util.stream.Collectors;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import org.lenguajesFP.Backend.Reader;
+import org.lenguajesFP.Backend.Writer;
 import org.lenguajesFP.Backend.exceptions.LexicalAnalyzerException;
 
 /**
@@ -17,6 +18,8 @@ import org.lenguajesFP.Backend.exceptions.LexicalAnalyzerException;
 public class LexicalsWebAnalyzerApp extends javax.swing.JFrame {
 
     private String input;
+    private Writer writer = new Writer();
+    
 
     /**
      * Creates new form LexicalsWebAnalyzerApp
@@ -35,7 +38,9 @@ public class LexicalsWebAnalyzerApp extends javax.swing.JFrame {
     private void initComponents() {
 
         containerjPnl = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
+        generatejBttn = new javax.swing.JButton();
+        optimizejBttn = new javax.swing.JButton();
+        exportjBttn = new javax.swing.JButton();
         textAreasContainerjPnl = new javax.swing.JPanel();
         jScrllPnInput = new javax.swing.JScrollPane();
         InputjTxtAr = new javax.swing.JTextArea();
@@ -59,10 +64,24 @@ public class LexicalsWebAnalyzerApp extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jButton1.setText("GENERAR");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        generatejBttn.setText("TRADUCIR");
+        generatejBttn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                generatejBttnActionPerformed(evt);
+            }
+        });
+
+        optimizejBttn.setText("OPTIMIZAR");
+        optimizejBttn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                optimizejBttnActionPerformed(evt);
+            }
+        });
+
+        exportjBttn.setText("GENERAR HTML");
+        exportjBttn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exportjBttnActionPerformed(evt);
             }
         });
 
@@ -71,15 +90,23 @@ public class LexicalsWebAnalyzerApp extends javax.swing.JFrame {
         containerjPnlLayout.setHorizontalGroup(
             containerjPnlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(containerjPnlLayout.createSequentialGroup()
-                .addGap(114, 114, 114)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 424, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(622, Short.MAX_VALUE))
+                .addGap(47, 47, 47)
+                .addComponent(generatejBttn, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(optimizejBttn, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(exportjBttn, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(639, Short.MAX_VALUE))
         );
         containerjPnlLayout.setVerticalGroup(
             containerjPnlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(containerjPnlLayout.createSequentialGroup()
                 .addGap(5, 5, 5)
-                .addComponent(jButton1))
+                .addGroup(containerjPnlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(generatejBttn)
+                    .addComponent(optimizejBttn)
+                    .addComponent(exportjBttn))
+                .addGap(9, 9, 9))
         );
 
         getContentPane().add(containerjPnl, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1160, 50));
@@ -187,26 +214,51 @@ public class LexicalsWebAnalyzerApp extends javax.swing.JFrame {
         input = InputjTxtAr.getText();
     }//GEN-LAST:event_InputjTxtArCaretUpdate
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void generatejBttnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generatejBttnActionPerformed
         // TODO add your handling code here:
-
         try {
-            Reader reader = new Reader();
-            reader.readCode(input);
-            String html = reader.getHtmlTokens().stream().collect(Collectors.joining());
-            String css = reader.getCssTokens().stream().collect(Collectors.joining());
-            String js = reader.getJsTokens().stream().collect(Collectors.joining());
-            OutputjTxtAr.setText("html\n"+html +"css\n"+ css +"js\n"+ js);
-
+            OutputjTxtAr.setText(writer.generateAndTranslate(input+"\n   "));
         } catch (LexicalAnalyzerException e) {
-            JOptionPane.showMessageDialog(this, "ANALISIS FINALIZADO", e.getMessage(), JOptionPane.INFORMATION_MESSAGE);
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error el texto ingresado", e.getMessage(), JOptionPane.ERROR_MESSAGE);
+        }catch(NullPointerException e){
+            JOptionPane.showMessageDialog(this, "Para traducir primero ingrese datos en el area de texto", "SIN DATOS", JOptionPane.ERROR_MESSAGE);
         }
 
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_generatejBttnActionPerformed
 
     private void OutputjTxtArCaretUpdate(javax.swing.event.CaretEvent evt) {//GEN-FIRST:event_OutputjTxtArCaretUpdate
         // TODO add your handling code here:
     }//GEN-LAST:event_OutputjTxtArCaretUpdate
+
+    private void optimizejBttnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_optimizejBttnActionPerformed
+        // TODO add your handling code here:
+        try {
+            OutputjTxtAr.setText(writer.optimize());
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Para optimizar primero debe traducir su codigo","DATOS SIN TRADUCIR",JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_optimizejBttnActionPerformed
+
+    private void exportjBttnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportjBttnActionPerformed
+        // TODO add your handling code here:
+        try {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        int selection = fileChooser.showOpenDialog(this);
+        if (selection == JFileChooser.APPROVE_OPTION) {
+            writer.export(fileChooser.getSelectedFile().getAbsolutePath());
+        }    
+        } catch (LexicalAnalyzerException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }catch(NullPointerException e){
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "No se puede exportar un html sin haber optimizado el codigo primero","Sin Optimizar",JOptionPane.ERROR_MESSAGE );
+        }
+        
+    }//GEN-LAST:event_exportjBttnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -254,13 +306,15 @@ public class LexicalsWebAnalyzerApp extends javax.swing.JFrame {
     private javax.swing.JMenuItem deleteMenuItem;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenuItem exitMenuItem;
+    private javax.swing.JButton exportjBttn;
     private javax.swing.JMenu fileMenu;
+    private javax.swing.JButton generatejBttn;
     private javax.swing.JMenu helpMenu;
-    private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrllPnInput;
     private javax.swing.JScrollPane jScrllPnlOutput;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem openMenuItem;
+    private javax.swing.JButton optimizejBttn;
     private javax.swing.JMenuItem pasteMenuItem;
     private javax.swing.JMenuItem saveAsMenuItem;
     private javax.swing.JMenuItem saveMenuItem;

@@ -41,7 +41,7 @@ public class CssAnalyzer extends LexicalAnalyzer {
          if (current() == '>' && input[index.get() + 1] == '>'){//cambio de estado
             languageTypeAnalyzer.read(tokens,errors,outputCode,input,index, htmlTokens, cssTokens, jsTokens);
 
-         } else if (input[current()] == '/'){//cometario
+         } else if (current() == '/'){//cometario
             CommentAnalyzer commentAnalyzer = new CommentAnalyzer(languageTypeAnalyzer);
             commentAnalyzer.readComment("CSS");
             initState();
@@ -105,26 +105,22 @@ public class CssAnalyzer extends LexicalAnalyzer {
             next();
             initState();
         } else if (other.isCharacterToken()){// el caraceter puede ser un token del tipo otros
-            //isPossibleToken();
             other.saveToken(String.valueOf(current()));
             outputCode.add(String.valueOf(current()));
             next();
             initState();
         } else if (universal.isCharacterToken()){// el caracter puede ser un token del tipo universal
-            //isPossibleToken();
             universal.saveToken();
             next();
             initState();
         } else if (isSpace(current()) && possibleToken.getPossibleToken() != null){//termina la palabra y esta puede ser un token
-            //isPossibleToken();
             next();
             initState();
         } else if (isSpace(current())){// si el espacio no es token
             outputCode.add(String.valueOf(current()));
             next();
             initState();
-        } else {//sigue avanzado
-            //validar si se trata de una excepcion
+        } else {
             concat();
             isException();
         }
