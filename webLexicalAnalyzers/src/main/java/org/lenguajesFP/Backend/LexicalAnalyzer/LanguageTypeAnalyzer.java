@@ -18,7 +18,7 @@ import static org.lenguajesFP.Backend.enums.LexicalState.html;
 
 public class LanguageTypeAnalyzer extends LexicalAnalyzer{
 
-    public List<String> read(List<Token> tokens, List<Token> errors, List<String> outputCode,
+    public List<String> read(List<Token> tokens, List<TokenError> errors, List<String> outputCode,
                      char[] input, Index index, List<String> htmlOutput, List<String> cssOutput,
                              List<String> jsOutput) throws LexicalAnalyzerException{
         this.tokens = tokens;
@@ -36,25 +36,6 @@ public class LanguageTypeAnalyzer extends LexicalAnalyzer{
             initState();
         }catch (ArrayIndexOutOfBoundsException e){
             System.out.println("SE ACABO XDD");
-        }
-
-        System.out.println("Escritura html");
-        String finalHtml = htmlTokens.stream().collect(Collectors.joining());
-        System.out.println(finalHtml);
-        System.out.println("Escritura CSS");
-        String finalCss = cssTokens.stream().collect(Collectors.joining());
-        System.out.println(finalCss);
-        System.out.println("Escritura JS");
-        String finalJs = jsTokens.stream().collect(Collectors.joining());
-        System.out.println(finalJs);
-        System.out.println("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
-        System.out.println("Token hallados:");
-        for (Token token : tokens) {
-            System.out.println(token.getLexeme() + " " + token.getType());
-        }
-        System.out.println("errores hallados");
-        for (Token token : errors) {
-            System.out.println(token);
         }
         return outputCode;
 

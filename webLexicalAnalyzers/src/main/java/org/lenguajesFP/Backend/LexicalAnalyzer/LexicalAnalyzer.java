@@ -7,6 +7,7 @@ import org.lenguajesFP.Backend.Token;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.lenguajesFP.Backend.TokenError;
 
 public class LexicalAnalyzer {
 
@@ -18,7 +19,7 @@ public class LexicalAnalyzer {
     protected List<String> cssTokens;
     protected List<String> jsTokens;
     protected List<Token> tokens;
-    protected List<Token> errors;
+    protected List<TokenError> errors;
     protected List<String> outputCode;
     protected PossibleToken possibleToken;
 
@@ -97,7 +98,7 @@ public class LexicalAnalyzer {
         return tokens;
     }
 
-    public List<Token> getErrors() {
+    public List<TokenError> getErrors() {
         return errors;
     }
 

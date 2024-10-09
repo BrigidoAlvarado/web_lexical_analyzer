@@ -15,6 +15,7 @@ public class Token {
         this.regularExpression = regularExpression;
         this.row = row;
         this.col = col;
+        this.lenguage = lenguage;
     }
 
     @Override
@@ -36,5 +37,13 @@ public class Token {
 
     public int getCol() {
         return col;
+    }
+
+    public String getRegularExpression() {
+        return regularExpression;
+    }
+
+    public String getLenguage() {
+        return lenguage;
     }
 }

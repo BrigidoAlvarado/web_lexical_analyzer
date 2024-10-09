@@ -40,15 +40,27 @@ public class Writer {
                 "\n                                       <<<<<<<<JAVASCRIPT-optimizado>>>>>>>\n"+jsOptimized);
     }
 
-    public void export(String path) throws LexicalAnalyzerException {
-        String title = "Html-Generado";
+    public String export(String path,String tittlePage) throws LexicalAnalyzerException {
         HtmlWriter htmlWriter = new HtmlWriter();
-        File fileHtml = new File(path + File.separatorChar + title + LocalDateTime.now() + ".html");
+        String newPath = path + File.separatorChar + tittlePage + LocalDateTime.now() + ".html";
+        File fileHtml = new File(newPath);
         try (FileWriter fileWriter = new FileWriter(fileHtml)){
             fileWriter.write(htmlWriter.getHtmlResult(htmlOptimized,cssOptimized,jsOptimized));
         } catch (IOException e) {
             throw new LexicalAnalyzerException("Error al escribir el archivo html generado");
         }
+        return newPath;
+    }
+
+    public String exportReports(String path,String tittlePage, String htmlContent) throws LexicalAnalyzerException {
+        String newPath = path + File.separatorChar + tittlePage + LocalDateTime.now() + ".html";
+        File fileHtml = new File(newPath);
+        try (FileWriter fileWriter = new FileWriter(fileHtml)){
+            fileWriter.write(htmlContent);
+        } catch (IOException e) {
+            throw new LexicalAnalyzerException("Error al escribir el archivo html de reportes");
+        }
+        return newPath;
     }
 
     public  Reader getReader(){

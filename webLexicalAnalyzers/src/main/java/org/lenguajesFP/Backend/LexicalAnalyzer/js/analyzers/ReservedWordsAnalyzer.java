@@ -53,7 +53,7 @@ public class ReservedWordsAnalyzer extends LexicalAnalyzer {
                 RESERVED_WORD,
                 possibleToken.getPossibleToken(),
                 "Javascript",
-                index.getRow() - 1,
+                index.getRow(),
                 index.getColumn() -1
         ));
         outputCode.add(possibleToken.getPossibleToken());

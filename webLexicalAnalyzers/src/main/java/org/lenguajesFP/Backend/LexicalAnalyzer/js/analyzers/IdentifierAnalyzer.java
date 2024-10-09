@@ -56,7 +56,7 @@ public class IdentifierAnalyzer extends LexicalAnalyzer {
                 "Identificador",
                 "[a-zA-Z]([a-zA-Z] | [0-9] | [ _ ])*",
                 "Javascript",
-                index.getRow() - 1,
+                index.getRow() ,
                 index.getColumn() - 1
         ));
         outputCode.add(possibleToken.getPossibleToken());

@@ -64,7 +64,7 @@ public class DecimalAnalyzer extends LexicalAnalyzer {
                 "[0-9]+ . [0-9]+",
                 "Javascript",
                 index.getRow(),
-                index.getColumn()
+                index.getColumn()-1
         ));
         outputCode.add(possibleToken.getPossibleToken());
         possibleToken.reStart();

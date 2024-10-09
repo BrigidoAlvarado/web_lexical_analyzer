@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 import org.lenguajesFP.Backend.Reader;
 import org.lenguajesFP.Backend.Writer;
 import org.lenguajesFP.Backend.exceptions.LexicalAnalyzerException;
+import org.lenguajesFP.Backend.reports.ReportsGenerator;
 
 /**
  *
@@ -19,7 +20,6 @@ public class LexicalsWebAnalyzerApp extends javax.swing.JFrame {
 
     private String input;
     private Writer writer = new Writer();
-    
 
     /**
      * Creates new form LexicalsWebAnalyzerApp
@@ -47,16 +47,11 @@ public class LexicalsWebAnalyzerApp extends javax.swing.JFrame {
         jScrllPnlOutput = new javax.swing.JScrollPane();
         OutputjTxtAr = new javax.swing.JTextArea();
         menuBar = new javax.swing.JMenuBar();
-        fileMenu = new javax.swing.JMenu();
-        openMenuItem = new javax.swing.JMenuItem();
-        saveMenuItem = new javax.swing.JMenuItem();
-        saveAsMenuItem = new javax.swing.JMenuItem();
+        reportsFileMenu = new javax.swing.JMenu();
+        tokensReportsMnItm = new javax.swing.JMenuItem();
+        errorsReportMnItm = new javax.swing.JMenuItem();
+        optimizeReportsMnItm = new javax.swing.JMenuItem();
         exitMenuItem = new javax.swing.JMenuItem();
-        editMenu = new javax.swing.JMenu();
-        cutMenuItem = new javax.swing.JMenuItem();
-        copyMenuItem = new javax.swing.JMenuItem();
-        pasteMenuItem = new javax.swing.JMenuItem();
-        deleteMenuItem = new javax.swing.JMenuItem();
         helpMenu = new javax.swing.JMenu();
         contentsMenuItem = new javax.swing.JMenuItem();
         aboutMenuItem = new javax.swing.JMenuItem();
@@ -139,21 +134,35 @@ public class LexicalsWebAnalyzerApp extends javax.swing.JFrame {
 
         getContentPane().add(textAreasContainerjPnl, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, 1130, 520));
 
-        fileMenu.setMnemonic('f');
-        fileMenu.setText("File");
+        reportsFileMenu.setMnemonic('f');
+        reportsFileMenu.setText("Reportes");
 
-        openMenuItem.setMnemonic('o');
-        openMenuItem.setText("Open");
-        fileMenu.add(openMenuItem);
+        tokensReportsMnItm.setMnemonic('o');
+        tokensReportsMnItm.setText("Reporte de Tokens");
+        tokensReportsMnItm.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tokensReportsMnItmActionPerformed(evt);
+            }
+        });
+        reportsFileMenu.add(tokensReportsMnItm);
 
-        saveMenuItem.setMnemonic('s');
-        saveMenuItem.setText("Save");
-        fileMenu.add(saveMenuItem);
+        errorsReportMnItm.setMnemonic('s');
+        errorsReportMnItm.setText("Reporte de Errores");
+        errorsReportMnItm.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                errorsReportMnItmActionPerformed(evt);
+            }
+        });
+        reportsFileMenu.add(errorsReportMnItm);
 
-        saveAsMenuItem.setMnemonic('a');
-        saveAsMenuItem.setText("Save As ...");
-        saveAsMenuItem.setDisplayedMnemonicIndex(5);
-        fileMenu.add(saveAsMenuItem);
+        optimizeReportsMnItm.setMnemonic('a');
+        optimizeReportsMnItm.setText("Reporte de Optimizacion");
+        optimizeReportsMnItm.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                optimizeReportsMnItmActionPerformed(evt);
+            }
+        });
+        reportsFileMenu.add(optimizeReportsMnItm);
 
         exitMenuItem.setMnemonic('x');
         exitMenuItem.setText("Exit");
@@ -162,33 +171,11 @@ public class LexicalsWebAnalyzerApp extends javax.swing.JFrame {
                 exitMenuItemActionPerformed(evt);
             }
         });
-        fileMenu.add(exitMenuItem);
+        reportsFileMenu.add(exitMenuItem);
 
-        menuBar.add(fileMenu);
-
-        editMenu.setMnemonic('e');
-        editMenu.setText("Edit");
-
-        cutMenuItem.setMnemonic('t');
-        cutMenuItem.setText("Cut");
-        editMenu.add(cutMenuItem);
-
-        copyMenuItem.setMnemonic('y');
-        copyMenuItem.setText("Copy");
-        editMenu.add(copyMenuItem);
-
-        pasteMenuItem.setMnemonic('p');
-        pasteMenuItem.setText("Paste");
-        editMenu.add(pasteMenuItem);
-
-        deleteMenuItem.setMnemonic('d');
-        deleteMenuItem.setText("Delete");
-        editMenu.add(deleteMenuItem);
-
-        menuBar.add(editMenu);
+        menuBar.add(reportsFileMenu);
 
         helpMenu.setMnemonic('h');
-        helpMenu.setText("Help");
 
         contentsMenuItem.setMnemonic('c');
         contentsMenuItem.setText("Contents");
@@ -217,11 +204,11 @@ public class LexicalsWebAnalyzerApp extends javax.swing.JFrame {
     private void generatejBttnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generatejBttnActionPerformed
         // TODO add your handling code here:
         try {
-            OutputjTxtAr.setText(writer.generateAndTranslate(input+"\n   "));
+            OutputjTxtAr.setText(writer.generateAndTranslate(input + "\n   "));
         } catch (LexicalAnalyzerException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error el texto ingresado", e.getMessage(), JOptionPane.ERROR_MESSAGE);
-        }catch(NullPointerException e){
+        } catch (NullPointerException e) {
             JOptionPane.showMessageDialog(this, "Para traducir primero ingrese datos en el area de texto", "SIN DATOS", JOptionPane.ERROR_MESSAGE);
         }
 
@@ -237,28 +224,82 @@ public class LexicalsWebAnalyzerApp extends javax.swing.JFrame {
             OutputjTxtAr.setText(writer.optimize());
         } catch (NullPointerException e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Para optimizar primero debe traducir su codigo","DATOS SIN TRADUCIR",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Para optimizar primero debe traducir su codigo", "DATOS SIN TRADUCIR", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_optimizejBttnActionPerformed
 
     private void exportjBttnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportjBttnActionPerformed
         // TODO add your handling code here:
         try {
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        int selection = fileChooser.showOpenDialog(this);
-        if (selection == JFileChooser.APPROVE_OPTION) {
-            writer.export(fileChooser.getSelectedFile().getAbsolutePath());
-        }    
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            int selection = fileChooser.showOpenDialog(this);
+            if (selection == JFileChooser.APPROVE_OPTION) {
+                writer.export(fileChooser.getSelectedFile().getAbsolutePath(), "Html-Generado");
+            }
         } catch (LexicalAnalyzerException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }catch(NullPointerException e){
+        } catch (NullPointerException e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "No se puede exportar un html sin haber optimizado el codigo primero","Sin Optimizar",JOptionPane.ERROR_MESSAGE );
+            JOptionPane.showMessageDialog(this, "No se puede exportar un html sin haber optimizado el codigo primero", "Sin Optimizar", JOptionPane.ERROR_MESSAGE);
         }
-        
+
     }//GEN-LAST:event_exportjBttnActionPerformed
+
+    private void tokensReportsMnItmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tokensReportsMnItmActionPerformed
+        // TODO add your handling code here:
+        try {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            int selection = fileChooser.showOpenDialog(this);
+            if (selection == JFileChooser.APPROVE_OPTION) {
+                ReportsGenerator reportsGenerator = new ReportsGenerator();
+                String outputPath = reportsGenerator.TokensReport(writer.getReader().getTokens(),fileChooser.getSelectedFile().getAbsolutePath());
+                JOptionPane.showMessageDialog(this, "Se guardo el archivo de reportes en \n" + outputPath, "Reporte generado exitosamente", JOptionPane.INFORMATION_MESSAGE);
+            }
+
+        } catch (LexicalAnalyzerException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error al reportar", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_tokensReportsMnItmActionPerformed
+
+    private void errorsReportMnItmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_errorsReportMnItmActionPerformed
+        // TODO add your handling code here:
+        try {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            int selection = fileChooser.showOpenDialog(this);
+            if (selection == JFileChooser.APPROVE_OPTION) {
+                ReportsGenerator reportsGenerator = new ReportsGenerator();
+                String outputPath = reportsGenerator.ErrorsReport(writer.getReader().getErrors(),fileChooser.getSelectedFile().getAbsolutePath());
+                JOptionPane.showMessageDialog(this, "Se guardo el archivo de reportes de errores en \n" + outputPath, "Reporte generado exitosamente", JOptionPane.INFORMATION_MESSAGE);
+            }
+
+        } catch (LexicalAnalyzerException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error al reportar los errores", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_errorsReportMnItmActionPerformed
+
+    private void optimizeReportsMnItmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_optimizeReportsMnItmActionPerformed
+        // TODO add your handling code here:
+        try {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            int selection = fileChooser.showOpenDialog(this);
+            if (selection == JFileChooser.APPROVE_OPTION) {
+                ReportsGenerator reportsGenerator = new ReportsGenerator();
+                String outputPath = reportsGenerator.optimizeReports(writer.getReader().getTokens(),fileChooser.getSelectedFile().getAbsolutePath());
+                JOptionPane.showMessageDialog(this, "Se guardo el archivo de reportes de optimizacion en \n" + outputPath, "Reporte generado exitosamente", JOptionPane.INFORMATION_MESSAGE);
+            }
+
+        } catch (LexicalAnalyzerException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Error al reportar", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_optimizeReportsMnItmActionPerformed
 
     /**
      * @param args the command line arguments
@@ -301,24 +342,19 @@ public class LexicalsWebAnalyzerApp extends javax.swing.JFrame {
     private javax.swing.JMenuItem aboutMenuItem;
     private javax.swing.JPanel containerjPnl;
     private javax.swing.JMenuItem contentsMenuItem;
-    private javax.swing.JMenuItem copyMenuItem;
-    private javax.swing.JMenuItem cutMenuItem;
-    private javax.swing.JMenuItem deleteMenuItem;
-    private javax.swing.JMenu editMenu;
+    private javax.swing.JMenuItem errorsReportMnItm;
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JButton exportjBttn;
-    private javax.swing.JMenu fileMenu;
     private javax.swing.JButton generatejBttn;
     private javax.swing.JMenu helpMenu;
     private javax.swing.JScrollPane jScrllPnInput;
     private javax.swing.JScrollPane jScrllPnlOutput;
     private javax.swing.JMenuBar menuBar;
-    private javax.swing.JMenuItem openMenuItem;
+    private javax.swing.JMenuItem optimizeReportsMnItm;
     private javax.swing.JButton optimizejBttn;
-    private javax.swing.JMenuItem pasteMenuItem;
-    private javax.swing.JMenuItem saveAsMenuItem;
-    private javax.swing.JMenuItem saveMenuItem;
+    private javax.swing.JMenu reportsFileMenu;
     private javax.swing.JPanel textAreasContainerjPnl;
+    private javax.swing.JMenuItem tokensReportsMnItm;
     // End of variables declaration//GEN-END:variables
 
 }

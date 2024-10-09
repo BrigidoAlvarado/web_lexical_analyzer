@@ -32,21 +32,19 @@ public class CommentAnalyzer extends LexicalAnalyzer{
         if (input[index.get()] == COMMENT_SYMBOL) {
             output = saveCurrentChar(output);
             concat();
-            next();
             commentContent();
         }
     }
 
     private void commentContent(){
-        if (input[index.get()] != '\n'){
+        if (input[index.get() + 1] != '\n'){
+            next();
             output = saveCurrentChar(output);
             concat();
-            next();
             commentContent();
         } else{
-            output = saveCurrentChar(output);
-            next();
             saveToken();
+            next();
         }
     }
 
