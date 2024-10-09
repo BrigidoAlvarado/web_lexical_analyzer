@@ -33,7 +33,6 @@ public class HtmlAnalyzer extends LexicalAnalyzer {
             next();
             lessState();
         } else  if (input[index.get()] == '>'){
-            System.out.println("puede ser un cambio de estado");
             //guardo la salida de texto
             if (outputTag != null){
                 outputCode.add(outputTag);
@@ -42,6 +41,7 @@ public class HtmlAnalyzer extends LexicalAnalyzer {
             index.decrease();
             languageTypeAnalyzer.read(tokens,errors,outputCode,input,index, htmlTokens, cssTokens, jsTokens);
         } else if (input[index.get()] == '/'){//cometario
+            if (outputTag != null){outputCode.add(outputTag); outputTag = null;}
             CommentAnalyzer commentAnalyzer = new CommentAnalyzer(languageTypeAnalyzer);
             commentAnalyzer.readComment("HTML");
             initState();
@@ -82,6 +82,7 @@ public class HtmlAnalyzer extends LexicalAnalyzer {
         }
         possibleToken.reStart();
         tagTokens.clear();
+        outputTag = null;
         //omite la lecutura de toda la linea
         while(input[index.get()] != '\n'){
             next();
@@ -105,17 +106,13 @@ public class HtmlAnalyzer extends LexicalAnalyzer {
 
     private void typeTagState() throws ArrayIndexOutOfBoundsException, LexicalAnalyzerException {
 
-        System.out.println("evaluando la posible etiqueta: "+input[index.get()]);
-
         // Se puede tratar de una etiqueta de cierre
-
-        if (input[index.get()] == '/'
-        && !possibleToken.getPossibleToken().equalsIgnoreCase(HtmlTag.entrada.name())){
+        if (input[index.get()] == '/'){
             next();
             if (input[index.get()] == '>' ){
                 System.out.println("guardando la etiqueta: "+possibleToken.getPossibleToken());
-                if (possibleToken.getPossibleToken().equalsIgnoreCase(HtmlTag.entrada.name())){
-                    System.out.println("es un area");
+                if (possibleToken.getPossibleToken().equalsIgnoreCase(HtmlTag.area.name())
+                || possibleToken.getPossibleToken().equalsIgnoreCase(HtmlTag.entrada.name())){
                     outputTag += HtmlTag.valueOf(possibleToken.getPossibleToken()).getTranslate() + "/>";
                     tagTokens.add(new Token( "/>", "Etiqueta cierre", "/>", "HTML", index.getRow(), index.getColumn()));
                 } else{
@@ -171,13 +168,7 @@ public class HtmlAnalyzer extends LexicalAnalyzer {
         try {
             HtmlElement htmlElement = new HtmlElement(this.languageTypeAnalyzer, tagTokens);
             if (htmlElement.readElements()){
-
-                System.out.println("tiene elementos validos");
-
                 outputTag += htmlElement.getOutputElement();
-
-                System.out.println("cogigo almacenado en la etiqueta "+htmlElement.getOutputElement());
-
                 saveTag(); //se guarda la etiqueta
                 next();
                 textState();// se valida si tiene texto asociado
@@ -188,9 +179,6 @@ public class HtmlAnalyzer extends LexicalAnalyzer {
     }
 
     private void textState() throws LexicalAnalyzerException {
-
-        System.out.println("en el estado de texto");
-
         TextAnalizer textAnalizer = new TextAnalizer(languageTypeAnalyzer, tagTokens,"HTML");
 
         try {

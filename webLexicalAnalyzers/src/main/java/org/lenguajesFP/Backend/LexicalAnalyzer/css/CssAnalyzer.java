@@ -41,7 +41,7 @@ public class CssAnalyzer extends LexicalAnalyzer {
          if (current() == '>' && input[index.get() + 1] == '>'){//cambio de estado
             languageTypeAnalyzer.read(tokens,errors,outputCode,input,index, htmlTokens, cssTokens, jsTokens);
 
-         } else if (input[index.get()] == '/'){//cometario
+         } else if (input[current()] == '/'){//cometario
             CommentAnalyzer commentAnalyzer = new CommentAnalyzer(languageTypeAnalyzer);
             commentAnalyzer.readComment("CSS");
             initState();
