@@ -78,7 +78,7 @@ public class HtmlAnalyzer extends LexicalAnalyzer {
     private void errorState(TokenError error) throws ArrayIndexOutOfBoundsException, LexicalAnalyzerException{
 
         if (error == null){
-            errors.add(new TokenError(possibleToken.getPossibleToken(), "", "HTML", row, column));
+            errors.add(new TokenError(possibleToken.getPossibleToken(), "", "HTML", index.getRow(), index.getColumn()));
         } else {
             errors.add(error);
         }
