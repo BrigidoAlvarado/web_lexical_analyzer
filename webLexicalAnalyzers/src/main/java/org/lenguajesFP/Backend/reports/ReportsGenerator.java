@@ -30,7 +30,6 @@ public class ReportsGenerator {
             row.add(token.getType());
             row.add(String.valueOf(token.getRow()));
             row.add(String.valueOf(token.getCol()));
-            System.out.println("lista guardada "+row);
             rows.add(row);
         }
         htmlContent = tableGenerator.generateHTMLTable(tittlePage, tittles, rows);
