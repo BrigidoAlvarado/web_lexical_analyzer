@@ -14,6 +14,7 @@ public class HtmlAnalyzer extends LexicalAnalyzer {
     private LanguageTypeAnalyzer languageTypeAnalyzer;
     private List<Token> tagTokens = new ArrayList<>();
     private String outputTag;
+    private String nameTag;
 
     public void read(LanguageTypeAnalyzer typeAnalyzer) throws ArrayIndexOutOfBoundsException, LexicalAnalyzerException{
         this.languageTypeAnalyzer = typeAnalyzer;
@@ -60,6 +61,7 @@ public class HtmlAnalyzer extends LexicalAnalyzer {
     private void tagNameState() throws ArrayIndexOutOfBoundsException, LexicalAnalyzerException{
         TagName tagName = new TagName();
         if (tagName.readTag(languageTypeAnalyzer)){
+            nameTag = possibleToken.getPossibleToken();
             tagTokens.add(new Token(
                     possibleToken.getPossibleToken(),
                     "Palabra Reservada",
@@ -93,9 +95,7 @@ public class HtmlAnalyzer extends LexicalAnalyzer {
 
     private void wordState() throws LexicalAnalyzerException{
 
-        System.out.println("en el estado de palabras");
-
-        if (isSpace(input[index.get()]) || input[index.get()] == '<' || input[index.get()] == '<'){
+        if (isSpace(input[index.get()]) || input[index.get()] == '<'){
             errorState(null);
         } else {
             concat();
@@ -110,7 +110,6 @@ public class HtmlAnalyzer extends LexicalAnalyzer {
         if (input[index.get()] == '/'){
             next();
             if (input[index.get()] == '>' ){
-                System.out.println("guardando la etiqueta: "+possibleToken.getPossibleToken());
                 if (possibleToken.getPossibleToken().equalsIgnoreCase(HtmlTag.area.name())
                 || possibleToken.getPossibleToken().equalsIgnoreCase(HtmlTag.entrada.name())){
                     outputTag += HtmlTag.valueOf(possibleToken.getPossibleToken()).getTranslate() + "/>";
@@ -118,8 +117,6 @@ public class HtmlAnalyzer extends LexicalAnalyzer {
                 } else{
                     outputTag += "/" + HtmlTag.valueOf(possibleToken.getPossibleToken()).getTranslate() + ">";
                     tagTokens.add(new Token( "/>", "Etiqueta cierre", "/>", "HTML", index.getRow(), index.getColumn()));                }
-                //System.out.println("es una etiqueta de cierre");
-                //imprimir la traduccion
                 possibleToken.reStart();
                 saveTag();
                 next();
@@ -129,7 +126,6 @@ public class HtmlAnalyzer extends LexicalAnalyzer {
         //Se trata de una etiqueta de apertura
         else if (isSpace(input[index.get()]) || input[index.get()] == '>'){
             outputTag += HtmlTag.valueOf(possibleToken.getPossibleToken()).getTranslate();
-            System.out.println("salida antes de entrar al estado final "+outputTag);
             endTagState();
         }
         // error
@@ -167,7 +163,7 @@ public class HtmlAnalyzer extends LexicalAnalyzer {
         //leer los posibles elementos de la etiqueta
         try {
             HtmlElement htmlElement = new HtmlElement(this.languageTypeAnalyzer, tagTokens);
-            if (htmlElement.readElements()){
+            if (htmlElement.readElements(nameTag)){
                 outputTag += htmlElement.getOutputElement();
                 saveTag(); //se guarda la etiqueta
                 next();
@@ -180,29 +176,18 @@ public class HtmlAnalyzer extends LexicalAnalyzer {
 
     private void textState() throws LexicalAnalyzerException {
         TextAnalizer textAnalizer = new TextAnalizer(languageTypeAnalyzer, tagTokens,"HTML");
-
         try {
             if (isSpace(input[index.get()]) || input[index.get()] == '<') {
-
                 if (isSpace(input[index.get()])){
                     outputCode.add(String.valueOf(input[index.get()]));
                     next();
                 }
                 initState();
             } else {
-                System.out.println("no es un espacio en blanco");
                 index.decrease();
             }
             if (textAnalizer.readString()) {
-                System.out.println("tiene texto asociado");
-
-                    System.out.println("se aprobo el texto asociado");
-
                     outputTag = possibleToken.getPossibleToken();
-
-                    System.out.println("se guardo el token texto " + possibleToken.getPossibleToken());
-                    System.out.println("el texto leido impreso es:  " + outputTag);
-
                     possibleToken.reStart();
                     saveTag();
                     initState();
@@ -220,10 +205,7 @@ public class HtmlAnalyzer extends LexicalAnalyzer {
         outputCode.add(outputTag);
         tagTokens.clear();
         outputTag = null;
-
         possibleToken.reStart();
-        System.out.println("se guardo la etiqueta");
-        System.out.println("texto de salida de la etiqueta recien guardada: " + outputCode);
     }
 
 }

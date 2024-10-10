@@ -10,7 +10,7 @@ import java.util.List;
 
 public class TagOrType extends LexicalAnalyzer{
 
-    private final static List<String> TAG_OR_TYPE = List.of(
+    public final static List<String> TAG_OR_TYPE = List.of(
             "body",
             "header",
             "main",

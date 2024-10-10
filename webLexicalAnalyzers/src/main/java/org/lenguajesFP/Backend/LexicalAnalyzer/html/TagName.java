@@ -10,7 +10,6 @@ public class TagName extends HtmlAnalyzer{
     public boolean readTag(LanguageTypeAnalyzer languageTypeAnalyzer) throws ArrayIndexOutOfBoundsException {
         super.initVars(languageTypeAnalyzer);
         initState();
-        System.out.println("retornando "+approved);
         return approved;
     }
 
@@ -31,8 +30,6 @@ public class TagName extends HtmlAnalyzer{
         if (isSpace(input[index.get()]) || input[index.get()] == '/' || input[index.get()] == '>'){
             //validar si es una palabra reservada
             approved = isReservedWord();
-            System.out.println("evaluando "+possibleToken.getPossibleToken());
-            System.out.println("la palabra reservada es: " + approved);
         } else if( isLessLetterOrNumber(input[index.get()])){
           concat();
           next();

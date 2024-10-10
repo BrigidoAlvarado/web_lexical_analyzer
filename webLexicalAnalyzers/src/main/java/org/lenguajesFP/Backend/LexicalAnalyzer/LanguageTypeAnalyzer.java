@@ -4,7 +4,6 @@ import org.lenguajesFP.Backend.Index;
 import org.lenguajesFP.Backend.LexicalAnalyzer.css.CssAnalyzer;
 import org.lenguajesFP.Backend.LexicalAnalyzer.html.HtmlAnalyzer;
 import org.lenguajesFP.Backend.LexicalAnalyzer.js.JsAnalyzer;
-import org.lenguajesFP.Backend.LexicalAnalyzer.js.enums.CharacterToken;
 import org.lenguajesFP.Backend.PossibleToken;
 import org.lenguajesFP.Backend.Token;
 import org.lenguajesFP.Backend.TokenError;
@@ -29,13 +28,12 @@ public class LanguageTypeAnalyzer extends LexicalAnalyzer{
         this.possibleToken = new PossibleToken();
         this.htmlTokens = htmlOutput;
         this.cssTokens = cssOutput;
-        System.out.println("2 cssTokens: " + cssTokens);
         this.jsTokens = jsOutput;
 
         try {
             initState();
         }catch (ArrayIndexOutOfBoundsException e){
-            System.out.println("SE ACABO XDD");
+            System.out.println("PROCESO TERMINADO");
         }
         return outputCode;
 
@@ -91,8 +89,6 @@ public class LanguageTypeAnalyzer extends LexicalAnalyzer{
             } else{
                 errors.add(new TokenError(possibleToken.getPossibleToken(), "Analizador de estados","", index.getRow(), index.getColumn()));
                 next();
-                System.out.println("se encontro un error llamado "+ possibleToken);
-                System.out.println("redirigiendo al inicio");
                 for (Token token : errors){
                     System.out.println(token.getLexeme());
                 }

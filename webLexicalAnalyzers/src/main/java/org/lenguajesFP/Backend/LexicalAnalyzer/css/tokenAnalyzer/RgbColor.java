@@ -15,23 +15,19 @@ public class RgbColor extends LanguageTypeAnalyzer {
     }
 
     public boolean isToken(){
-        System.out.println("puede ser un color rgba");
         isToken = false;
         initState();
         return isToken;
     }
 
     private void initState(){
-        System.out.println("evaluando "+possibleToken.getPossibleToken());
         if (possibleToken.getPossibleToken().equalsIgnoreCase(KEYWORD)){
-            System.out.println("es un color rgba");
             next();
             keyStatus();
         }
     }
 
     private void keyStatus(){
-        System.out.println("en key status");
         if (current() == '('){
             concat();
             next();
@@ -40,7 +36,6 @@ public class RgbColor extends LanguageTypeAnalyzer {
     }
 
     private void par1Status(){
-        System.out.println("en par1 status");
         if (isNumber(current())){
             concat();
             next();
@@ -55,7 +50,6 @@ public class RgbColor extends LanguageTypeAnalyzer {
     }
 
     private void number1(){
-        System.out.println("en number1");
         if (current() == ','){
             concat();
             next();
@@ -70,7 +64,6 @@ public class RgbColor extends LanguageTypeAnalyzer {
     }
 
     private void comma1(){
-        System.out.println("en comma1");
         if (isNumber(current())){
             concat();
             next();
@@ -85,7 +78,6 @@ public class RgbColor extends LanguageTypeAnalyzer {
     }
 
     private void number2(){
-        System.out.println("en number2");
         if (current() == ','){
             concat();
             next();
@@ -100,7 +92,6 @@ public class RgbColor extends LanguageTypeAnalyzer {
     }
 
     private void comma2(){
-        System.out.println("en comma2");
         if (isNumber(current())){
             concat();
             next();
@@ -115,8 +106,6 @@ public class RgbColor extends LanguageTypeAnalyzer {
     }
 
     private void number3 (){
-        System.out.println("en number3");
-        System.out.println("evaluando "+current());
         if (current() == ')'){
             concat();
             next();
@@ -135,12 +124,10 @@ public class RgbColor extends LanguageTypeAnalyzer {
     }
 
     private void finalStatus(){
-        System.out.println("en final");
         isToken = true;
     }
 
     private void comma3(){
-        System.out.println("en comma3");
         if (isNumber(current())){
             concat();
             next();
@@ -155,7 +142,6 @@ public class RgbColor extends LanguageTypeAnalyzer {
     }
 
     private void number4(){
-        System.out.println("en number4");
         if (current() == '.'){
             concat();
             next();
@@ -174,7 +160,6 @@ public class RgbColor extends LanguageTypeAnalyzer {
     }
 
     private void point(){
-        System.out.println("en point");
         if (isNumber(current())){
             concat();
             next();
@@ -189,7 +174,6 @@ public class RgbColor extends LanguageTypeAnalyzer {
     }
 
     private void number5(){
-        System.out.println("en number5");
         if (current() == ')'){
             concat();
             next();

@@ -52,7 +52,6 @@ public class CssAnalyzer extends LexicalAnalyzer {
              initState();
          } else if (current() == '`') {//cadena
              StringAnalyzer stringAnalyzer = new StringAnalyzer(languageTypeAnalyzer,tokens,"CSS",'`','`');
-             System.out.println("el valor del indice es en css analyzer "+index);
              try {
                  if (stringAnalyzer.readString()){
                      outputCode.add(possibleToken.getPossibleToken());
@@ -136,7 +135,6 @@ public class CssAnalyzer extends LexicalAnalyzer {
             rgbColor.saveToken();
             initState();
         } else {
-            System.out.println("no es una exepcion "+possibleToken.getPossibleToken());
             isPossibleToken();
             next();
             initState();
@@ -144,7 +142,6 @@ public class CssAnalyzer extends LexicalAnalyzer {
     }
 
     private void isPossibleToken() throws LexicalAnalyzerException {
-        System.out.println("actual "+current());
         if (possibleToken.getPossibleToken() != null){
             if (tagOrType.isToken()){
                 tagOrType.saveToken();

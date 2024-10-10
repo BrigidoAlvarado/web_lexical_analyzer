@@ -30,15 +30,6 @@ public class Reader {
                 cssTokens,
                 jsTokens);
 
-        System.out.println("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
-        System.out.println("Token hallados:");
-        for (Token token : tokens) {
-            System.out.println(token.getLexeme() + " " + token.getType());
-        }
-        System.out.println("errores hallados");
-        for (Token token : errors) {
-            System.out.println(token);
-        }
     }
     
     public List<String> getHtmlTokens(){

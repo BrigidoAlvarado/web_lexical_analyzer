@@ -4,10 +4,8 @@
  */
 package org.lenguajesFP.Frontend;
 
-import java.util.stream.Collectors;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import org.lenguajesFP.Backend.Reader;
 import org.lenguajesFP.Backend.Writer;
 import org.lenguajesFP.Backend.exceptions.LexicalAnalyzerException;
 import org.lenguajesFP.Backend.reports.ReportsGenerator;
@@ -111,6 +109,7 @@ public class LexicalsWebAnalyzerApp extends javax.swing.JFrame {
 
         InputjTxtAr.setColumns(20);
         InputjTxtAr.setRows(5);
+        InputjTxtAr.setBorder(javax.swing.BorderFactory.createTitledBorder(null, " Entrada de Texto", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
         InputjTxtAr.addCaretListener(new javax.swing.event.CaretListener() {
             public void caretUpdate(javax.swing.event.CaretEvent evt) {
                 InputjTxtArCaretUpdate(evt);
@@ -123,6 +122,7 @@ public class LexicalsWebAnalyzerApp extends javax.swing.JFrame {
         OutputjTxtAr.setEditable(false);
         OutputjTxtAr.setColumns(20);
         OutputjTxtAr.setRows(5);
+        OutputjTxtAr.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Resultado", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION));
         OutputjTxtAr.addCaretListener(new javax.swing.event.CaretListener() {
             public void caretUpdate(javax.swing.event.CaretEvent evt) {
                 OutputjTxtArCaretUpdate(evt);
@@ -208,8 +208,6 @@ public class LexicalsWebAnalyzerApp extends javax.swing.JFrame {
         } catch (LexicalAnalyzerException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error el texto ingresado", e.getMessage(), JOptionPane.ERROR_MESSAGE);
-        } catch (NullPointerException e) {
-            JOptionPane.showMessageDialog(this, "Para traducir primero ingrese datos en el area de texto", "SIN DATOS", JOptionPane.ERROR_MESSAGE);
         }
 
     }//GEN-LAST:event_generatejBttnActionPerformed
@@ -236,6 +234,7 @@ public class LexicalsWebAnalyzerApp extends javax.swing.JFrame {
             int selection = fileChooser.showOpenDialog(this);
             if (selection == JFileChooser.APPROVE_OPTION) {
                 writer.export(fileChooser.getSelectedFile().getAbsolutePath(), "Html-Generado");
+                JOptionPane.showMessageDialog(this, "El archivo html se genero exitosamente", "Archivo Generado", JOptionPane.INFORMATION_MESSAGE);
             }
         } catch (LexicalAnalyzerException e) {
             e.printStackTrace();
@@ -262,6 +261,9 @@ public class LexicalsWebAnalyzerApp extends javax.swing.JFrame {
         } catch (LexicalAnalyzerException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, e.getMessage(), "Error al reportar", JOptionPane.ERROR_MESSAGE);
+        }catch(NullPointerException e){
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Para generar reportes de tokens primero debe traducir su codigo", "Sin Traducir", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_tokensReportsMnItmActionPerformed
 
@@ -276,10 +278,12 @@ public class LexicalsWebAnalyzerApp extends javax.swing.JFrame {
                 String outputPath = reportsGenerator.ErrorsReport(writer.getReader().getErrors(),fileChooser.getSelectedFile().getAbsolutePath());
                 JOptionPane.showMessageDialog(this, "Se guardo el archivo de reportes de errores en \n" + outputPath, "Reporte generado exitosamente", JOptionPane.INFORMATION_MESSAGE);
             }
-
         } catch (LexicalAnalyzerException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, e.getMessage(), "Error al reportar los errores", JOptionPane.ERROR_MESSAGE);
+        } catch(NullPointerException e){
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Para generar reportes de errores primero debe traducir su codigo", "Sin Traducir", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_errorsReportMnItmActionPerformed
 
@@ -294,47 +298,14 @@ public class LexicalsWebAnalyzerApp extends javax.swing.JFrame {
                 String outputPath = reportsGenerator.optimizeReports(writer.getReader().getTokens(),fileChooser.getSelectedFile().getAbsolutePath());
                 JOptionPane.showMessageDialog(this, "Se guardo el archivo de reportes de optimizacion en \n" + outputPath, "Reporte generado exitosamente", JOptionPane.INFORMATION_MESSAGE);
             }
-
         } catch (LexicalAnalyzerException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, e.getMessage(), "Error al reportar", JOptionPane.ERROR_MESSAGE);
+        }catch(NullPointerException e){
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Para generar reportes de optimizacion primero debe optimizar su codigo", "Sin Optimizacion", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_optimizeReportsMnItmActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(LexicalsWebAnalyzerApp.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(LexicalsWebAnalyzerApp.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(LexicalsWebAnalyzerApp.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(LexicalsWebAnalyzerApp.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new LexicalsWebAnalyzerApp().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea InputjTxtAr;

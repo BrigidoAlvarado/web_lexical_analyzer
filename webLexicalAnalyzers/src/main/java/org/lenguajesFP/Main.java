@@ -1,11 +1,11 @@
 package org.lenguajesFP;
 
-import org.lenguajesFP.Backend.Reader;
+import org.lenguajesFP.Frontend.LexicalsWebAnalyzerApp;
+
 
 public class Main {
     public static void main(String[] args) {
-        /*String text = "        adsf     >>[html] ";
-        Reader reader = new Reader();
-        *///reader.readCode(text);
+        LexicalsWebAnalyzerApp analyzerApp = new LexicalsWebAnalyzerApp();
+        analyzerApp.setVisible(true);
     }
 }

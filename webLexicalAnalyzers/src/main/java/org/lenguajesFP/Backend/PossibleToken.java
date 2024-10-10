@@ -23,11 +23,7 @@ public class PossibleToken {
         this.possibleToken = possibleToken;
     }
     public void removeLastChar(){
-        System.out.println("se removera  de <"+possibleToken+">");
         possibleToken = possibleToken.substring(0, possibleToken.length() - 1);
     }
 
-    public char getLastChar(){
-        return possibleToken.charAt(possibleToken.length() - 1);
-    }
 }

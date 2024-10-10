@@ -31,11 +31,8 @@ public class Other extends LexicalAnalyzer {
     }
 
     public boolean isCharacterToken(){
-        System.out.println("is character token evaluando "+current());
         if (OTHER_CHARS.contains(current())){
-            System.out.println("is other character token evaluando "+current());
             if (current() == CHAR_EXCEPTIONS){
-                System.out.println("is current character token evaluando "+current());
                 return isOtherExceptions();
             }
             return true;
@@ -56,7 +53,6 @@ public class Other extends LexicalAnalyzer {
     }
 
     private boolean isOtherExceptions(){
-        System.out.println("is other exceptions "+input[index.get()+1]);
         return (isSpace(input[index.get() + 1]));
     }
 

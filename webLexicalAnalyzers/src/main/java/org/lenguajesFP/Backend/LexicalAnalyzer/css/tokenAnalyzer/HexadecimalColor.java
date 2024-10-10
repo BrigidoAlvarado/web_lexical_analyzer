@@ -27,8 +27,6 @@ public class HexadecimalColor extends LexicalAnalyzer {
     }
 
     public boolean isToken(){
-        System.out.println("leyendo posible color");
-        System.out.println("evaluando "+current());
         isToken = false;
         indexSave = index.get();
         rowSave = index.getRow();
@@ -55,7 +53,6 @@ public class HexadecimalColor extends LexicalAnalyzer {
     }
     
     private void f1Status(){
-        System.out.println("en f1");
         if (isLetter(current()) || isNumber(current())){
             concat();
             next();
@@ -64,7 +61,6 @@ public class HexadecimalColor extends LexicalAnalyzer {
     }
     
     private void f2Status(){
-        System.out.println("en f2");
         if (isLetter(current()) || isNumber(current())) {
             concat();
             next();
@@ -73,7 +69,6 @@ public class HexadecimalColor extends LexicalAnalyzer {
     }
 
     private void f3Status(){
-        System.out.println("en f3");
         if (other.isCharacterToken() ||
                 combinator.isCharacterToken() ||
                 universal.isCharacterToken() ||

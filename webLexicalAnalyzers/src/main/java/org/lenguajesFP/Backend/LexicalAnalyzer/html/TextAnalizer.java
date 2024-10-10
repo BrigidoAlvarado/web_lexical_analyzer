@@ -14,14 +14,12 @@ public class TextAnalizer extends StringAnalyzer {
     public TextAnalizer (LanguageTypeAnalyzer languageTypeAnalyzer, List<Token> tagToken, String languague) throws LexicalAnalyzerException {
 
         super(languageTypeAnalyzer, tagToken, languague);
-        System.out.println("inician el lecto de texto");
         startSymbol = '>';
-        endSymnbol = '<';
+        endSymbol = '<';
     }
 
     @Override
     protected void initState() throws ArrayIndexOutOfBoundsException, InvalidTokenException{
-        System.out.println("evaluando: "+input[index.get()]);
         if (input[index.get()] == startSymbol){
             next();
             stringState();
@@ -39,7 +37,7 @@ public class TextAnalizer extends StringAnalyzer {
 
     @Override
     protected void stringState() throws ArrayIndexOutOfBoundsException{
-        if (input[index.get()] == endSymnbol){
+        if (input[index.get()] == endSymbol){
             finalState();
         } else {
             concat();

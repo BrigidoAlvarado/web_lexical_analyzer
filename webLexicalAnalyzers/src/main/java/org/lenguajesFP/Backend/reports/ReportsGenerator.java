@@ -45,7 +45,7 @@ public class ReportsGenerator {
             List<String> row = new ArrayList<>();
             row.add(token.getLexeme());
             row.add(token.getLenguage());
-            row.add(" ");
+            row.add(token.getSuggestedLanguage());
             row.add(String.valueOf(token.getRow()));
             row.add(String.valueOf(token.getCol()));
             rows.add(row);

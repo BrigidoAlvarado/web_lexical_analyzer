@@ -15,7 +15,7 @@ public class StringAnalyzer extends LexicalAnalyzer {
     protected String language;
     protected boolean approved = false;
     protected char startSymbol;
-    protected char endSymnbol;
+    protected char endSymbol;
 
     public StringAnalyzer(LanguageTypeAnalyzer languageTypeAnalyzer, List<Token> tagToken, String language) throws LexicalAnalyzerException {
         this.language = language;
@@ -23,7 +23,7 @@ public class StringAnalyzer extends LexicalAnalyzer {
         this.languageTypeAnalyzer = languageTypeAnalyzer;
         super.initVars(this.languageTypeAnalyzer);
         startSymbol = '"';
-        endSymnbol = '"';
+        endSymbol = '"';
     }
 
     public StringAnalyzer(LanguageTypeAnalyzer languageTypeAnalyzer, List<Token> tagToken, String language, char startSymbol, char endSymbol) throws LexicalAnalyzerException {
@@ -32,18 +32,16 @@ public class StringAnalyzer extends LexicalAnalyzer {
         this.languageTypeAnalyzer = languageTypeAnalyzer;
         super.initVars(this.languageTypeAnalyzer);
         this.startSymbol = startSymbol;
-        this.endSymnbol = endSymbol;
+        this.endSymbol = endSymbol;
     }
 
 
     public boolean readString() throws LexicalAnalyzerException, InvalidTokenException {
-        System.out.println("entrando en el estado inicial");
         initState();
         return approved;
     }
 
     protected void initState() throws ArrayIndexOutOfBoundsException, InvalidTokenException{
-        System.out.println("evaluando: "+input[index.get()]);
         if (input[index.get()] == startSymbol){
             concat();
             next();
@@ -61,7 +59,7 @@ public class StringAnalyzer extends LexicalAnalyzer {
     }
 
     protected void stringState() throws ArrayIndexOutOfBoundsException{
-        if (input[index.get()] == endSymnbol){
+        if (input[index.get()] == endSymbol){
             concat();
             finalState();
         } else {
